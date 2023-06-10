@@ -8,6 +8,12 @@ ARG GLIBC_VERSION=2.35-r0
 ARG AWSCLI_VERSION=2.11.11
 
 # install glibc compatibility for alpine
+
+RUN curl -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-17.04.0-ce.tgz \
+  && tar xzvf docker-17.04.0-ce.tgz \
+  && mv docker/docker /usr/local/bin \
+  && rm -r docker docker-17.04.0-ce.tgz
+  
 RUN apk --no-cache add \
         binutils \
         curl \

@@ -1,13 +1,11 @@
 pipeline {
-    agent { dockerfile true }
+    agent {
+        docker { image 'node:7-alpine' }
+    }
     stages {
         stage('Test') {
             steps {
-                echo "hello I am here"
-                sh 'aws'
-                sh 'kubectl'
-                sh 'helm'
-                sh 'terraform'
+                sh 'node --version'
             }
         }
     }

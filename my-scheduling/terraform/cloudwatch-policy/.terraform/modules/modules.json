@@ -1,0 +1,1 @@
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"dpp-myscheduling-cloudwatch-policy","Source":"git::ssh://git@github.com/cahcommercial/dpp-infrastructure-as-code?ref=main//terraform/cloudwatch-policy","Dir":".terraform/modules/dpp-myscheduling-cloudwatch-policy/terraform/cloudwatch-policy"}]}

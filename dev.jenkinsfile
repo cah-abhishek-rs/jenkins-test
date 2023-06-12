@@ -27,10 +27,14 @@ pipeline {
     stages {
         stage('Test') {
             steps {
-                sh 'terraform'
-                sh 'aws'
-                sh 'helm'
-                sh 'kubectl'
+                container('dpp-mx-jenkins-agent') {
+                sh """
+                    terraform
+                    aws
+                    helm
+                    kubectl
+                """
+                }
             }
         }
     }

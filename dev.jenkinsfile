@@ -34,17 +34,15 @@ pipeline {
         stage('Test') {
             steps {
                 container('dpp-mx-jenkins-agent') {
-                withCredentials([string(credentialsId: 'dpp-github-service-user', variable: 'GITHUB_TOKEN')]) {
-               sh """
-                    echo "${GITHUB_TOKEN}"
-                    terraform init --backend-config=dev.hcl
-                    terraform plan -var-file="dev.tfvars.json"
-                    aws --version
-                    helm version
-                    kubectl version
-                    
+                sh """
+                      echo "${GITHUB_TOKEN}"
+                      terraform init --backend-config=dev.hcl
+                      terraform plan -var-file="dev.tfvars.json"
+                      aws --version
+                      helm version
+                      kubectl version
+                      
                 """
-                }
                 
                 }
             }

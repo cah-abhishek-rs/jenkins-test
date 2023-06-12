@@ -27,7 +27,7 @@ pipeline {
     environment {
         AWS_ACCESS_KEY_ID     = credentials('DPP_AWS_SECRET_ACCESS_ID')
         AWS_SECRET_ACCESS_KEY = credentials('DPP_AWS_SECRET_ACCESS_KEY')
-        CHECK_KEY_2 = credentials('DPP_GITHUB_SERVICE_USER')
+        CHECK_KEY_2 = credentials('dpp-github-service-user')
         AWS_REGION = 'us-east-1'
     }
     stages {

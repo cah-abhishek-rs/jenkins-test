@@ -27,7 +27,6 @@ pipeline {
     environment {
         AWS_ACCESS_KEY_ID     = credentials('DPP_AWS_SECRET_ACCESS_ID')
         AWS_SECRET_ACCESS_KEY = credentials('DPP_AWS_SECRET_ACCESS_KEY')
-        CHECK_KEY = credentials('DPP-GITHUB-SERVICE-USER')
         CHECK_KEY_2 = credentials('DPP_GITHUB_SERVICE_USER')
         AWS_REGION = 'us-east-1'
     }
@@ -35,9 +34,8 @@ pipeline {
         stage('Test') {
             steps {
                 container('dpp-mx-jenkins-agent') {
-                withCredentials([gitUsernamePassword(credentialsId: CHECK_KEY, gitToolName: 'git-tool')]) {
+                withCredentials([gitUsernamePassword(credentialsId: CHECK_KEY_2, gitToolName: 'git-tool')]) {
                   sh """
-                    echo "${CHECK_KEY}"
                     echo "${CHECK_KEY_2}"
                     terraform init --backend-config=dev.hcl
                     terraform plan -var-file="dev.tfvars.json"

@@ -37,8 +37,8 @@ pipeline {
         steps {
           container('dpp-mx-jenkins-agent') {
             withCredentials([gitUsernamePassword(credentialsId: 'dpp-github-service-user', gitToolName: 'Default')]) {
-                dir('/my-scheduling/terraform/cloudwatch-policy') 
-                sh 'build.sh'
+                //dir('/my-scheduling/terraform/cloudwatch-policy') 
+                sh 'pwd'
              }                   
            }
 

@@ -34,6 +34,7 @@ pipeline {
         stage('Test') {
             steps {
                 container('dpp-mx-jenkins-agent') {
+                withCredentials([gitUsernamePassword(credentialsId: 'dpp-github-service-user', gitToolName: 'Default')]) {
                 sh """
                       echo "${GITHUB_TOKEN}"
                       terraform init --backend-config=dev.hcl
@@ -42,7 +43,8 @@ pipeline {
                       helm version
                       kubectl version
                       
-                """
+                  """
+                  }
                 
                 }
             }

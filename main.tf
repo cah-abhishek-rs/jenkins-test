@@ -13,7 +13,7 @@ provider "aws" {
 }
 
 module "eks_cluster" {
-  source                      = "https://github.com/cahcommercial/dpp-mx-shared-infrastructure-as-code/tree/ORN-175/eks-cluster/terraform/eks-cluster"
+  source                      = "github.com/cahcommercial/dpp-mx-shared-infrastructure-as-code/tree/ORN-175/eks-cluster/terraform/eks-cluster"
   aws_region                  = var.aws_region
   context                     = var.context
   aws_subnets                 = var.aws_subnets

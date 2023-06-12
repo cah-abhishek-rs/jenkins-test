@@ -1,0 +1,27 @@
+{
+    "aws_region" : "us-east-1",
+    "context" : "dev",
+    "aws_subnets" : ["subnet-078ecc89bdff4b9a4", "subnet-05d33fddf9d8caaed"],
+    "ec2_key_pairs" : "digitalpharmacy-dev",
+    "mx_management_sg_ids" : ["sg-050fa1fe4214d9e44"],
+    "security_group_ids" : ["sg-0f99e9b26fb2b8686"],
+    "cluster_name" : "digital-pharmacy",
+    "eks_version" : "1.26",
+    "eks_ami_namespace" : "/mscripts/service/eks/optimized-ami/1.20/amazon-linux-2/recommended/image_id",
+    "aws_account_id" : "998585994771",
+    "aws_vpc_id" : "vpc-9839b7fe",
+    "domain" : "*.remscripts.com",
+    "instance_type" : "m5.xlarge",
+    "volume_size" : 100,
+    "volume_type" : "gp3",
+    "device_name" : "/dev/xvda",
+    "apm_id" : "27533",
+    "cost_center" : "8290000016",
+    "maintained_by" : "Digital Pharmacy",
+    "product_team" : "Digital Pharmacy",
+    "eks_node_group_desired_size" : 3,
+    "eks_node_group_max_size" : 2,
+    "eks_node_group_min_size" : 1,
+    "additional_tags" : {}
+}
+

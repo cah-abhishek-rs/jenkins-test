@@ -24,16 +24,27 @@ pipeline {
       """
     }
   }
+    environment {
+        AWS_ACCESS_KEY_ID     = credentials('DPP_AWS_SECRET_ACCESS_ID')
+        AWS_SECRET_ACCESS_KEY = credentials('DPP_AWS_SECRET_ACCESS_KEY'))
+        AWS_REGION = 'us-east-1'
+    }
     stages {
         stage('Test') {
             steps {
                 container('dpp-mx-jenkins-agent') {
-                sh """
-                    terraform --version
+                withCredentials([gitUsernamePassword(credentialsId: 'dpp-github-service-user', gitToolName: 'git-tool')]) {
+                  sh 'git fetch --all'
+                  sh """
+                    terraform init --backend-config=dev.hcl
+                    terraform plan -var-file="dev.tfvars.json"
                     aws --version
                     helm version
                     kubectl version
+                    
                 """
+                }
+                
                 }
             }
         }

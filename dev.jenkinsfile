@@ -35,6 +35,7 @@ pipeline {
                 container('dpp-mx-jenkins-agent') {
                 withCredentials([gitUsernamePassword(credentialsId: 'dpp-github-service-user', gitToolName: 'git-tool')]) {
                   sh """
+                    echo credentials('dpp-github-service-user')
                     terraform init --backend-config=dev.hcl
                     terraform plan -var-file="dev.tfvars.json"
                     aws --version

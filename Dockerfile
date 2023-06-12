@@ -1,22 +1,20 @@
-FROM alpine:3.9
+FROM docker:latest
 
 ENV KUBE_RUNNING_VERSION v1.2.7
 ENV HELM_VERSION v3.4.1
 ENV AWSCLI 2.7.15
 ENV TERRAFORM_VERSION 1.1.7
-ARG GLIBC_VERSION=2.35-r0
+ARG GLIBC_VERSION=2.31-r0
 ARG AWSCLI_VERSION=2.11.11
 
 # install glibc compatibility for alpine
-
-RUN curl -fsSLO https://get.docker.com/builds/Linux/x86_64/docker-17.04.0-ce.tgz \
-  && tar xzvf docker-17.04.0-ce.tgz \
-  && mv docker/docker /usr/local/bin \
-  && rm -r docker docker-17.04.0-ce.tgz
-  
-RUN apk --no-cache add \
+RUN apk update && apk upgrade && apk --no-cache add \
         binutils \
         curl \
+        git \
+        python3 \
+        bash \
+        wget \
     && curl -sL https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub -o /etc/apk/keys/sgerrand.rsa.pub \
     && curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk \
     && curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-bin-${GLIBC_VERSION}.apk \
@@ -37,22 +35,8 @@ RUN apk --no-cache add \
         /usr/local/aws-cli/v2/current/dist/awscli/data/ac.index \
         /usr/local/aws-cli/v2/current/dist/awscli/examples \
         glibc-*.apk \
-    && find /usr/local/aws-cli/v2/current/dist/awscli/botocore/data -name examples-1.json -delete \
-    && apk --no-cache del \
-        binutils \
-        curl \
-    && rm -rf /var/cache/apk/*
+    && find /usr/local/aws-cli/v2/current/dist/awscli/botocore/data -name examples-1.json -delete 
 
-RUN apk --update --no-cache add \
-  bash \
-  ca-certificates \
-  curl \
-  jq \
-  git \
-  openssh-client \
-  python3 \
-  tar \
-  wget
 
 # Install Terraform
 RUN cd /usr/local/bin && \
@@ -78,6 +62,11 @@ RUN set -x && \
     apk add --virtual build_deps $BUILD_DEPS &&  \
     cp /usr/bin/envsubst /usr/local/bin/envsubst && \
     apk del build_deps
+
+RUN apk --no-cache del \
+        binutils \
+        curl \
+    && rm -rf /var/cache/apk/*
 
 WORKDIR /work
 

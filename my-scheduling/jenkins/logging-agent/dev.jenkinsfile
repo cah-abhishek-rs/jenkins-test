@@ -25,53 +25,24 @@ pipline{
     }
   } 
 
-    parameters {
-      string(name: 'environment', defaultValue: 'dev', description: 'Selected environment for deployment')
-    }
-
     environment {
-        AWS_ACCESS_KEY_ID     = credentials('DEV_AWS_ACCESS_KEY_ID')
-        AWS_SECRET_ACCESS_KEY = credentials('DEV_AWS_SECRET_ACCESS_KEY')
-        GIT_SSH_KEY = credentials('GIT_SSH_KEY_DPP_IAC')
+        AWS_ACCESS_KEY_ID     = credentials('DPP_AWS_SECRET_ACCESS_ID')
+        AWS_SECRET_ACCESS_KEY = credentials('DPP_AWS_SECRET_ACCESS_KEY')
         AWS_REGION = 'us-east-1'
 
     }
-    
-    stage('Terraform Deploy') {
+
+    stages{
+     stage('Terraform Deploy') {
         steps {
           container('dpp-mx-jenkins-agent') {
-            script {
-              dir('/my-scheduling/terraform/cloudwatch-policy') 
-               
-              sh """
+            withCredentials([gitUsernamePassword(credentialsId: 'dpp-github-service-user', gitToolName: 'Default')]) {
+                //dir('/my-scheduling/terraform/cloudwatch-policy') 
+                //sh 'build.sh'
+                sh 'terraform --version'
+             }                   
+           }
 
-              echo "Logging in to EKS cluster"
-
-              aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}
-              aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
-              aws configure set region ${AWS_REGION}
-              aws configure set output json
-              aws eks --region ${AWS_REGION} update-kubeconfig --name digital-pharmacy-dev-cluster
-              
-              echo "Copying the github ssh key for the repo in a file"
-
-              cat <<EOF >  ~/.ssh/github_token
-              ${GIT_SSH_KEY}
-              EOF
-              chmod 400 ~/.ssh/github_token
-              ssh-add ~/.ssh/github_token
-
-              echo "Initializing cloudwatch policy for the cluster"
-
-              terraform init --backend-config=backends/${params.environment}.hcl --auto-approve=true
-
-              echo "Plan cloudwatch policy for the cluster"
-
-              terraform plan -var-file=env/${params.environment}.tfvars.json -out=cloudwatch-policy-output --auto-approve=false
-
-              """
-
-            }
           } 
         }
     }

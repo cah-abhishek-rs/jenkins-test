@@ -10,7 +10,7 @@ aws configure set output json
 
 echo "params.env value"
 
-${params.environment}
+echo ${params.environment}
 
 echo "Change the pwd to cloudwatch-policy"
 

@@ -12,15 +12,15 @@ echo ${params.environment}
 
 echo "Change the pwd to cloudwatch-policy"
 
-cd  cd ../../terraform/cloudwatch-policy
+cd ../../terraform/cloudwatch-policy
 
 echo "Initializing cloudwatch policy for the cluster"
 
-terraform init --backend-config=backends/${params.environment}.hcl --auto-approve=true
+terraform init --backend-config=backends/dev.hcl --auto-approve=true
 
 echo "Plan cloudwatch policy for the cluster"
 
-terraform plan -var-file=env/${params.environment}.tfvars.json -out=cloudwatch-policy-output --auto-approve=false
+terraform plan -var-file=env/dev.tfvars.json -out=cloudwatch-policy-output --auto-approve=false
 
 # echo "Apply cloudwatch policy for the cluster" 
 

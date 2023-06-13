@@ -40,7 +40,8 @@ pipeline {
                 dir('my-scheduling/jenkins/logging-agent') 
                 {
                 sh 'pwd'
-                sh 'deploy.sh'
+                sh 'ls'
+                sh 'cat deploy.sh'
                 }
              }                   
            }

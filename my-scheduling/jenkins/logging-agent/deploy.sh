@@ -53,13 +53,13 @@ cd 'dpp-infrastructure-as-code/charts'
 
 pwd
 
-echo "Helm upgrade fluent-bit" 
+echo "Helm install fluent-bit" 
 
-helm upgrade apply-fluent-bit -f fluent-bit/ -f fluent-bit/values.yaml  --values   ../../fluent-bit/$ENV/values.yaml --dry-run --debug
+helm install apply-fluent-bit fluent-bit/ -f  fluent-bit/values.yaml  --values ../../fluent-bit/$ENV/values.yaml
 
 echo "Helm install fluent-cloudwatch" 
 
-helm upgrade apply-fluentd-cloudwatch -f  fluentd-cloudwatch/ -f  fluentd-cloudwatch/values.yaml  --values ../../fluentd-cloudwatch/$ENV/values.yaml --dry-run --debug
+helm install apply-fluent-bit fluentd-cloudwatch/ -f  fluentd-cloudwatch/values.yaml  --values ../../fluentd-cloudwatch/$ENV/values.yaml
 
 echo "Helm installed successfully"
 

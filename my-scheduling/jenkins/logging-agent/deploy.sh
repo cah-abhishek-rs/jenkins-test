@@ -20,7 +20,7 @@ cat backends/dev.hcl
 
 echo "Initializing cloudwatch policy for the cluster"
 
-terraform init -migrate-state --backend-config=backends/dev.hcl -auto-approve=false
+terraform init -migrate-state --backend-config=backends/dev.hcl
 
 echo "Plan cloudwatch policy for the cluster"
 

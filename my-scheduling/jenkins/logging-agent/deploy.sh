@@ -64,6 +64,8 @@ terraform plan -var-file=env/$ENV.tfvars.json -out=eks-cluster-policy-output
 
 echo "Terraform applied successfully"
 
+pwd
+
 cd ../charts/
 
 # echo "Cloning dpp-infrastructure-as-code repository" 

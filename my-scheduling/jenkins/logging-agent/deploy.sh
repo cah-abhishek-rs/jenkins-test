@@ -28,4 +28,21 @@ terraform plan -var-file=env/$ENV.tfvars.json -out=cloudwatch-policy-output
 
 # terraform apply cloudwatch-policy-output
 
+
+echo "Change the pwd to cloudwatch-log-group"
+
+cd ../cloudwatch-log-group
+
+echo "Initializing cloudwatch log group for the cluster"
+
+terraform init --backend-config=backends/$ENV.hcl
+
+echo "Plan cloudwatch policy for the cluster"
+
+terraform plan -var-file=env/$ENV.tfvars.json -out=cloudwatch-log-group-output
+
+# echo "Apply cloudwatch policy for the cluster" 
+
+# terraform apply cloudwatch-log-group-output
+
 echo "Built successfully"

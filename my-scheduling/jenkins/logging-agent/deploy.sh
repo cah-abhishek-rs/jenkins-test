@@ -8,10 +8,11 @@ aws configure set region ${AWS_REGION}
 aws configure set output json
 # aws eks --region ${AWS_REGION} update-kubeconfig --name digital-pharmacy-${params.environment}-cluster
 
+echo ${params.environment}
 
 echo "Change the pwd to cloudwatch-policy"
 
-cd my-scheduling/terraform/eks-cluster-policy
+cd  cd ../../terraform/cloudwatch-policy
 
 echo "Initializing cloudwatch policy for the cluster"
 

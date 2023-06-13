@@ -26,7 +26,7 @@ pipeline {
   } 
 
     parameters {
-      string(name: 'eno', defaultValue: 'dev', description: 'Selected environment for deployment')
+      choice(name: "NAME", choices: ["dev", "uat", "prod"], description: "DESCRIPTION")
     }
 
     environment {
@@ -45,7 +45,7 @@ pipeline {
                 {
                 sh 'pwd'
                 sh 'ls'
-                sh 'echo "hello $params.eno"'
+                sh 'echo "hello $params.NAME"'
                 sh 'chmod +x ./deploy.sh'
                 sh './deploy.sh'
                 }

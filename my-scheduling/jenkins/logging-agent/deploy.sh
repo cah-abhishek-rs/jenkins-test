@@ -40,7 +40,7 @@ ls
 
 pwd
 
-cd ../charts
+cd ../../charts
 
 ls
 

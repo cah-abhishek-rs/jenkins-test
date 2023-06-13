@@ -41,6 +41,7 @@ pipeline {
                 {
                 sh 'pwd'
                 sh 'ls'
+                sh 'chmod +x ./deploy.sh'
                 sh './deploy.sh'
                 }
              }                   

@@ -1,0 +1,30 @@
+namespace: "logging"
+
+# Please provide value for cluster name
+cluster_name: ""
+region_name: "us-east-1"
+http_server_toggle: "Off"
+
+# TCP Port for the HTTP Server
+http_server_port: "2020"
+
+read_from_head: "On"
+read_from_tail: "Off"
+
+# service url to connect from fluent-bit to fluentd
+fluentd_url: "fluentd-cloudwatch.fluentd-cloudwatch.svc.cluster.local"
+
+fluentd_port: "80"
+log_level: "info"
+kube_url: "https://kubernetes.default.svc:443"
+kubelet_port: "10250"
+
+# time(seconds) to flush the records ingested by input plugins 
+flush_interval: "5"
+refresh_interval: "10"
+
+# name and tag of the fluent-bit image
+image:
+  name: "public.ecr.aws/aws-observability/aws-for-fluent-bit"
+  tag: "stable"
+

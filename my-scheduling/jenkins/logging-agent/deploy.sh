@@ -62,4 +62,28 @@ terraform plan -var-file=env/$ENV.tfvars.json -out=eks-cluster-policy-output
 
 # terraform apply eks-cluster-policy-output
 
-echo "Built successfully"
+echo "Terraform applied successfully"
+
+cd ../charts/
+
+# echo "Cloning dpp-infrastructure-as-code repository" 
+
+git(
+    url: 'https://github.com/cahcommercial/dpp-infrastructure-as-code.git',
+    branch: "main"
+)
+
+cd 'dpp-infrastructure-as-code/charts'
+
+pwd
+
+# echo "Helm install fluent-bit" 
+
+helm install apply-fluent-bit fluent-bit/ --values ../../fluent-bit/$ENV/values.yaml --dry-run --debug
+
+# echo "Helm install fluent-cloudwatch" 
+
+helm install apply-fluentd-cloudwatch fluentd-cloudwatch/ --values ../../fluentd-cloudwatch/$ENV/values.yaml --dry-run --debug
+
+echo "Helm installed successfully"
+

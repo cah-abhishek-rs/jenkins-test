@@ -37,7 +37,7 @@ pipeline {
     }
 
     stages{
-     stage('Terraform Deploy') {
+     stage('Terraform/Helm Deploy') {
         steps {
           container('dpp-mx-jenkins-agent') {
             withCredentials([gitUsernamePassword(credentialsId: 'dpp-github-service-user', gitToolName: 'Default')]) {

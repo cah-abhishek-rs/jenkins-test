@@ -33,7 +33,6 @@ pipeline {
         AWS_ACCESS_KEY_ID     = credentials('DPP_AWS_SECRET_ACCESS_ID')
         AWS_SECRET_ACCESS_KEY = credentials('DPP_AWS_SECRET_ACCESS_KEY')
         AWS_REGION = 'us-east-1'
-
     }
 
     stages{
@@ -43,10 +42,8 @@ pipeline {
             withCredentials([gitUsernamePassword(credentialsId: 'dpp-github-service-user', gitToolName: 'Default')]) {
                 dir('my-scheduling/jenkins/logging-agent') 
                 {
-                sh 'pwd'
-                sh 'ls'
-                sh 'echo "hello $ENV"'
-                sh '/bin/sh ./deploy.sh'
+                sh '/bin/sh ./tf-deploy.sh'
+                sh '/bin/sh ./helm-deploy.sh'
                 }
              }                   
            }

@@ -1,27 +1,11 @@
-namespace: fluentd-cloudwatch
-
-# port where the service is exposed to the cluster
-servicePort: 80
-
-# port where fluentd runs
-containerPort: 9880
-
 # AWS credentials
 awsCred:
-  accessKeyId: ""
-  secretAccessKey: ""
+  accessKeyId: ${AWS_ACCESS_KEY_ID}
+  secretAccessKey: ${AWS_SECRET_ACCESS_KEY}
 
 # AWS region
 awsRegion: us-east-1
 
-# no. of fluentd pods
-replicas: 1
-
-# fluentd image
-image:
-  name: artifacts.cahcommtech.com/digital-pillar/fluentd
-  tag: v1.16.0-debian-1.0-cloudwatch-logs-0.14.3
-
 # cluster names for log groups
 # add or pass an array of cluster names
-clusterNames:
+clusterNames: ["digital-pharmacy-dev-cluster"]

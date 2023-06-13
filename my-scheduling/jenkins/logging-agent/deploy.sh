@@ -8,23 +8,21 @@ aws configure set region ${AWS_REGION}
 aws configure set output json
 # aws eks --region ${AWS_REGION} update-kubeconfig --name digital-pharmacy-${params.environment}-cluster
 
-echo ${params.environment}
+echo "params.env value"
+
+${params.environment}
 
 echo "Change the pwd to cloudwatch-policy"
 
 cd ../../terraform/cloudwatch-policy
 
-echo "output of dev.hcl"
-
-cat backends/dev.hcl
-
 echo "Initializing cloudwatch policy for the cluster"
 
-terraform init --backend-config=backends/dev.hcl
+terraform init --backend-config=backends/${params.environment}.hcl
 
 echo "Plan cloudwatch policy for the cluster"
 
-terraform plan -var-file=env/dev.tfvars.json -out=cloudwatch-policy-output
+terraform plan -var-file=env/${params.environment}.tfvars.json -out=cloudwatch-policy-output
 
 # echo "Apply cloudwatch policy for the cluster" 
 

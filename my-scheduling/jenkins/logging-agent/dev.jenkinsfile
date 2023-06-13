@@ -25,6 +25,10 @@ pipeline {
     }
   } 
 
+    parameters {
+      string(name: 'environment', defaultValue: 'dev', description: 'Selected environment for deployment')
+    }
+
     environment {
         AWS_ACCESS_KEY_ID     = credentials('DPP_AWS_SECRET_ACCESS_ID')
         AWS_SECRET_ACCESS_KEY = credentials('DPP_AWS_SECRET_ACCESS_KEY')

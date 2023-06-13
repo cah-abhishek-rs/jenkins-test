@@ -24,7 +24,7 @@ terraform init --backend-config=backends/dev.hcl
 
 echo "Plan cloudwatch policy for the cluster"
 
-terraform plan -var-file=env/dev.tfvars.json -out=cloudwatch-policy-output -auto-approve=false
+terraform plan -var-file=env/dev.tfvars.json -out=cloudwatch-policy-output
 
 # echo "Apply cloudwatch policy for the cluster" 
 

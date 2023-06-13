@@ -50,7 +50,7 @@ git(
     url: 'https://github.com/cahcommercial/dpp-infrastructure-as-code.git',
     branch: "main"
 )
-
+git branch
 ls
 cd 'dpp-infrastructure-as-code/charts'
 

@@ -40,7 +40,7 @@ pipeline {
                 dir('my-scheduling/terraform/cloudwatch-policy') 
                 {
                 sh 'pwd'
-                sh 'build.sh'
+                sh './build.sh'
                 }
              }                   
            }

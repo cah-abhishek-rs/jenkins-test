@@ -46,7 +46,7 @@ ls
 
 # echo "Cloning dpp-infrastructure-as-code repository" 
 
-git url: 'https://github.com/cahcommercial/dpp-infrastructure-as-code.git'
+git clone https://github.com/cahcommercial/dpp-infrastructure-as-code.git
 git branch main
 ls
 cd 'dpp-infrastructure-as-code/charts'

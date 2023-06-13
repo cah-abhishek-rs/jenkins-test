@@ -16,13 +16,6 @@ echo "Change the pwd to cloudwatch-policy"
 
 cd ../../terraform/cloudwatch-policy
 
-echo "Initializing cloudwatch policy for the cluster"
-
-terraform init --backend-config=backends/$ENV.hcl
-
-echo "Plan cloudwatch policy for the cluster"
-
-terraform plan -var-file=env/$ENV.tfvars.json -out=cloudwatch-policy-output
 
 # echo "Apply cloudwatch policy for the cluster" 
 
@@ -33,13 +26,6 @@ echo "Change the pwd to cloudwatch-log-group"
 
 cd ../cloudwatch-log-group
 
-echo "Initializing cloudwatch log group for the cluster"
-
-terraform init --backend-config=backends/$ENV.hcl
-
-echo "Plan cloudwatch policy for the cluster"
-
-terraform plan -var-file=env/$ENV.tfvars.json -out=cloudwatch-log-group-output
 
 # echo "Apply cloudwatch log group for the cluster" 
 
@@ -50,23 +36,13 @@ echo "Change the pwd to eks-cluster-policy"
 
 cd ../eks-cluster-policy
 
-echo "Initializing eks cluster policy for the cluster"
-
-terraform init --backend-config=backends/$ENV.hcl
-
-echo "Plan eks cluster policy for the cluster"
-
-terraform plan -var-file=env/$ENV.tfvars.json -out=eks-cluster-policy-output
-
-# echo "Apply eks cluster policy for the cluster" 
-
-# terraform apply eks-cluster-policy-output
-
-echo "Terraform applied successfully"
+ls
 
 pwd
 
-cd ../charts/
+cd ../charts
+
+ls
 
 # echo "Cloning dpp-infrastructure-as-code repository" 
 
@@ -75,6 +51,7 @@ git(
     branch: "main"
 )
 
+ls
 cd 'dpp-infrastructure-as-code/charts'
 
 pwd

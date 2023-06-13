@@ -9,6 +9,10 @@ aws configure set output json
 # aws eks --region ${AWS_REGION} update-kubeconfig --name digital-pharmacy-${params.environment}-cluster
 
 
+echo "Change the pwd to cloudwatch-policy"
+
+cd my-scheduling/terraform/eks-cluster-policy
+
 echo "Initializing cloudwatch policy for the cluster"
 
 terraform init --backend-config=backends/${params.environment}.hcl --auto-approve=true

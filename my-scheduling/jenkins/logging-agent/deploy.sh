@@ -41,8 +41,25 @@ echo "Plan cloudwatch policy for the cluster"
 
 terraform plan -var-file=env/$ENV.tfvars.json -out=cloudwatch-log-group-output
 
-# echo "Apply cloudwatch policy for the cluster" 
+# echo "Apply cloudwatch log group for the cluster" 
 
 # terraform apply cloudwatch-log-group-output
+
+
+echo "Change the pwd to eks-cluster-policy"
+
+cd ../eks-cluster-policy
+
+echo "Initializing eks cluster policy for the cluster"
+
+terraform init --backend-config=backends/$ENV.hcl
+
+echo "Plan eks cluster policy for the cluster"
+
+terraform plan -var-file=env/$ENV.tfvars.json -out=eks-cluster-policy-output
+
+# echo "Apply eks cluster policy for the cluster" 
+
+# terraform apply eks-cluster-policy-output
 
 echo "Built successfully"

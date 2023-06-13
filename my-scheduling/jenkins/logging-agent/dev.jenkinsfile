@@ -41,7 +41,7 @@ pipeline {
                 {
                 sh 'pwd'
                 sh 'ls'
-                sh 'cat deploy.sh'
+                sh './deploy.sh'
                 }
              }                   
            }

@@ -14,6 +14,10 @@ echo "Change the pwd to cloudwatch-policy"
 
 cd ../../terraform/cloudwatch-policy
 
+echo "output of dev.hcl"
+
+cat backends/dev.hcl
+
 echo "Initializing cloudwatch policy for the cluster"
 
 terraform init -backend-config=backends/dev.hcl -auto-approve=true

@@ -10,7 +10,7 @@ aws configure set output json
 
 echo "params.env value"
 
-echo ${params.NAME}
+echo $ENV
 
 echo "Change the pwd to cloudwatch-policy"
 
@@ -18,11 +18,11 @@ cd ../../terraform/cloudwatch-policy
 
 echo "Initializing cloudwatch policy for the cluster"
 
-terraform init --backend-config=backends/dev.hcl
+terraform init --backend-config=backends/$ENV.hcl
 
 echo "Plan cloudwatch policy for the cluster"
 
-terraform plan -var-file=env/dev.tfvars.json -out=cloudwatch-policy-output
+terraform plan -var-file=env/$ENV.tfvars.json -out=cloudwatch-policy-output
 
 # echo "Apply cloudwatch policy for the cluster" 
 

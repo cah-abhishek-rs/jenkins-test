@@ -26,7 +26,7 @@ pipeline {
   } 
 
     parameters {
-      choice(name: "NAME", choices: ["dev", "uat", "prod"], description: "DESCRIPTION")
+      choice(name: "ENV", choices: ["dev", "uat", "prod"], description: "Selected environment for deployment")
     }
 
     environment {
@@ -45,9 +45,8 @@ pipeline {
                 {
                 sh 'pwd'
                 sh 'ls'
-                sh 'echo "hello $NAME"'
-                sh 'chmod +x ./deploy.sh'
-                sh './deploy.sh'
+                sh 'echo "hello $ENV"'
+                sh '/bin/sh ./deploy.sh'
                 }
              }                   
            }

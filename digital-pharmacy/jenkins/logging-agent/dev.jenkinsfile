@@ -42,9 +42,14 @@ pipeline {
                 container('dpp-mx-jenkins-iac-agent') {
                     withCredentials([gitUsernamePassword(credentialsId: 'dpp-github-service-user', gitToolName: 'Default')]) {
                        dir('digital-pharmacy/jenkins/logging-agent') {
-                            sh '/bin/sh ../tasks/aws-configure.sh'
-                            sh '/bin/sh ../tasks/terraform-deploy.sh'
-                            sh '/bin/sh ../tasks/helm-deploy.sh'
+                            sh '''
+                            echo 'Logging in to EKS cluster'
+                            /bin/sh ../tasks/aws-configure.sh
+                            echo 'Generating kubeconfig'
+                            aws eks --region ${AWS_REGION} update-kubeconfig --name digital-pharmacy-$ENV-cluster
+                            /bin/sh ../tasks/terraform-deploy.sh
+                            /bin/sh ../tasks/helm-deploy.sh
+                            '''
                         }
                     }
                 }

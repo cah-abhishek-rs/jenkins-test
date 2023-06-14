@@ -5,7 +5,8 @@ cp ../../terraform/terraform.tf ../../terraform/cloudwatch-log-group/
 cp ../../terraform/terraform.tf ../../terraform/cloudwatch-policy/
 cp ../../terraform/terraform.tf ../../terraform/eks-cluster-policy/
 
-echo "Change the pwd to cloudwatch-policy"
+# changing the presnt working directory to /cloudwatch-policy
+echo "Change the pwd to /cloudwatch-policy"
 cd ../../terraform/cloudwatch-policy
 echo "Initializing cloudwatch policy for the cluster"
 terraform init --backend-config=backends/$ENV.hcl
@@ -19,7 +20,8 @@ then
     terraform apply cloudwatch-policy-output
 fi
 
-echo "Change the pwd to cloudwatch-log-group"
+# changing the presnt working directory to /cloudwatch-log-group
+echo "Change the pwd to /cloudwatch-log-group"
 cd ../cloudwatch-log-group
 echo "Initializing cloudwatch log group for the cluster"
 terraform init --backend-config=backends/$ENV.hcl
@@ -33,6 +35,7 @@ then
     terraform apply cloudwatch-log-group-output
 fi
 
+# changing the presnt working directory to /eks-cluster-policy
 echo "Change the pwd to eks-cluster-policy"
 cd ../eks-cluster-policy
 echo "Initializing eks cluster policy for the cluster"

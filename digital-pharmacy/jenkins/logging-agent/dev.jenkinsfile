@@ -1,16 +1,16 @@
 pipeline {
     agent {
-    kubernetes {
-      yaml """
+        kubernetes {
+            yaml '''
         apiVersion: v1
         kind: Pod
         metadata:
           labels:
-            name: dpp-mx-jenkins-agent
+            name: dpp-mx-jenkins-iac-agent
         spec:
           containers:
-          - name: dpp-mx-jenkins-agent
-            image: 998585994771.dkr.ecr.us-east-1.amazonaws.com/dpp-mx-jenkins-agent:latest
+          - name: dpp-mx-jenkins-iac-agent
+            image: 998585994771.dkr.ecr.us-east-1.amazonaws.com/dpp-mx-jenkins-iac-agent:latest
             command:
             - cat
             tty: true
@@ -21,13 +21,13 @@ pipeline {
             - name: dockersock
               hostPath:
                 path: /var/run/docker.sock
-      """
+      '''
+        }
     }
-  } 
 
     parameters {
-      choice(name: "ENV", choices: ["dev", "uat", "prod"], description: "Selected environment for deployment")
-      booleanParam(name: "TEST", defaultValue: true, description: "Select this for dry run (only plan command)")
+        choice(name: 'ENV', choices: ['dev', 'uat', 'prod'], description: 'Selected environment for deployment')
+        booleanParam(name: 'TEST', defaultValue: true, description: 'Select this for dry run (only plan command)')
     }
 
     environment {
@@ -36,20 +36,19 @@ pipeline {
         AWS_REGION = 'us-east-1'
     }
 
-    stages{
-     stage('Terraform/Helm Deploy') {
-        steps {
-          container('dpp-mx-jenkins-agent') {
-            withCredentials([gitUsernamePassword(credentialsId: 'dpp-github-service-user', gitToolName: 'Default')]) {
-                dir('digital-pharmacy/jenkins/logging-agent') 
-                {
-                 sh '/bin/sh ./aws-login.sh'
-                 sh '/bin/sh ./terraform-deploy.sh'
-                 sh '/bin/sh ./helm-deploy.sh'
+    stages {
+        stage('Terraform/Helm Deploy') {
+            steps {
+                container('dpp-mx-jenkins-iac-agent') {
+                    withCredentials([gitUsernamePassword(credentialsId: 'dpp-github-service-user', gitToolName: 'Default')]) {
+                       dir('digital-pharmacy/jenkins/logging-agent') {
+                            sh '/bin/sh ../tasks/aws-configure.sh'
+                            sh '/bin/sh ../tasks/terraform-deploy.sh'
+                            sh '/bin/sh ../tasks/helm-deploy.sh'
+                        }
+                    }
                 }
-              }                   
             }
-          } 
         }
     }
 }

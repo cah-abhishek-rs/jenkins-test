@@ -27,6 +27,7 @@ pipeline {
 
     parameters {
       choice(name: "ENV", choices: ["dev", "uat", "prod"], description: "Selected environment for deployment")
+      booleanParam(name: "TEST", defaultValue: true, description: "Select this for dry run (only plan command)")
     }
 
     environment {
@@ -40,14 +41,14 @@ pipeline {
         steps {
           container('dpp-mx-jenkins-agent') {
             withCredentials([gitUsernamePassword(credentialsId: 'dpp-github-service-user', gitToolName: 'Default')]) {
-                dir('my-scheduling/jenkins/logging-agent') 
+                dir('digital-pharmacy/jenkins/logging-agent') 
                 {
-                sh '/bin/sh ./tf-deploy.sh'
-                sh '/bin/sh ./helm-deploy.sh'
+                 sh '/bin/sh ./aws-login.sh'
+                 sh '/bin/sh ./terraform-deploy.sh'
+                 sh '/bin/sh ./helm-deploy.sh'
                 }
-             }                   
-           }
-
+              }                   
+            }
           } 
         }
     }

@@ -93,6 +93,7 @@ pipeline {
                         dir('digital-pharmacy/pipeline-tools-jenkins/tasks/test') {
                             try {
                                 echo 'RUNNING UNIT TEST CASES..'
+                                sh 'ls -l'
                                 sh 'test.sh'
                             }
                             catch (exc) {

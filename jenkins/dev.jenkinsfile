@@ -76,8 +76,6 @@ pipeline {
                         ls -l
                         cd ../
                         ls -l
-                        cd
-                        pwd
                     '''
                     }
                 }

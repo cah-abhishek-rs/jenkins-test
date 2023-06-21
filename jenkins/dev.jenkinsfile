@@ -85,7 +85,7 @@ pipeline {
         stage('Run Test Cases') {
             steps {
                 container('dpp-mx-jenkins-iac-agent') {
-                        dir('digital-pharmacy/pipeline-tools-jenkins/dpp-mx-shared-infrastructure-as-code/tasks/test') {
+                        dir('digital-pharmacy/pipeline-tools-jenkins/dpp-mx-shared-infrastructure-as-code/jenkins/tasks/test') {
                             sh '''
                                     ls -l
                                     /bin/sh test.sh

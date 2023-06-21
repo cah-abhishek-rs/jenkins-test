@@ -84,13 +84,15 @@ pipeline {
             steps {
                 container('dpp-mx-jenkins-iac-agent') {
                     script {
-                        try {
-                            echo 'RUNNING UNIT TEST CASES..'
-                            sh '/bin/sh ./pipeline-tools-jenkins/tasks/deploy/deploy.sh'
-                        }
-                        catch (exc) {
-                            echo 'UNIT TEST CASES FAILED!'
-                            currentBuild.result = 'FAILURE'
+                        dir('digital-pharmacy/pipeline-tools-jenkins/tasks') {
+                            try {
+                                echo 'RUNNING UNIT TEST CASES..'
+                                sh '/bin/sh deploy/deploy.sh'
+                            }
+                            catch (exc) {
+                                echo 'UNIT TEST CASES FAILED!'
+                                currentBuild.result = 'FAILURE'
+                            }
                         }
                     }
                 }
@@ -100,13 +102,15 @@ pipeline {
             steps {
                 container('dpp-mx-jenkins-iac-agent') {
                     script {
-                        try {
-                            echo 'INITIATING BUILD..'
-                            sh '/bin/sh ./pipeline-tools-jenkins/tasks/build/build.sh'
-                        }
-                        catch (exc) {
-                            echo 'BUILD FAILED!'
-                            currentBuild.result = 'FAILURE'
+                        dir('digital-pharmacy/pipeline-tools-jenkins/tasks') {
+                            try {
+                                echo 'INITIATING BUILD..'
+                                sh '/bin/sh build/build.sh'
+                            }
+                            catch (exc) {
+                                echo 'BUILD FAILED!'
+                                currentBuild.result = 'FAILURE'
+                            }
                         }
                     }
                 }
@@ -115,14 +119,18 @@ pipeline {
         stage('Veracode scan') {
             steps {
                 container('dpp-mx-jenkins-iac-agent') {
-                    sh '/bin/sh ./pipeline-tools-jenkins/tasks/veracode/veracode.sh'
+                    dir('digital-pharmacy/pipeline-tools-jenkins/tasks') {
+                        sh '/bin/sh veracode/veracode.sh'
+                    }
                 }
             }
         }
         stage('Sonarqube') {
             steps {
                 container('dpp-mx-jenkins-iac-agent') {
-                    sh '/bin/sh ./pipeline-tools-jenkins/tasks/sonarqube/sonar.sh'
+                    dir('digital-pharmacy/pipeline-tools-jenkins/tasks') {
+                        sh '/bin/sh sonarqube/sonar.sh'
+                    }  
                 }
             }
         }

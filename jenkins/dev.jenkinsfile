@@ -90,6 +90,7 @@ pipeline {
                             try {
                                 echo 'RUNNING UNIT TEST CASES..'
                                 sh '''
+                                    ls -l
                                     /bin/sh deploy.sh
                                 '''
                             }

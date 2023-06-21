@@ -62,7 +62,9 @@ pipeline {
                         git checkout ORN-182/gateway-pipline
                         pwd
                         ls -l
-                        cd ../
+                        cd jenkins
+                        ls -l
+                        cd ../../
                         
                         echo "Cloning dpp-infrastructure-as-code" 
                         git clone https://github.com/cahcommercial/dpp-infrastructure-as-code.git pipeline-tools-chart

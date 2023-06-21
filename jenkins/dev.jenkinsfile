@@ -1,0 +1,130 @@
+pipeline {
+    agent {
+        kubernetes {
+            yaml '''
+                apiVersion: v1
+                kind: Pod
+                metadata:
+                labels:
+                    name: dpp-mx-jenkins-iac-agent
+                spec:
+                containers:
+                - name: dpp-mx-jenkins-iac-agent
+                    image: 998585994771.dkr.ecr.us-east-1.amazonaws.com/dpp-mx-jenkins-iac-agent:latest
+                    command:
+                    - cat   
+                    tty: true
+                    volumeMounts:
+                    - name: dockersock
+                        mountPath: "/var/run/docker.sock"
+            '''
+        }
+    }
+
+    parameters {
+        choice(name: 'ENV', choices: ['dev', 'uat', 'prod'], description: 'Selected environment for deployment')
+    }
+
+    environment {
+        ENV                   = $ENV
+        GIT_BRANCH            = "${env.GIT_BRANCH}"
+        GIT_COMMIT_ID         = "${env.GIT_COMMIT}"
+        PROJECT_NAME          = "MX-DIGITAL-PHARMACY-GATEWAY"
+        AWS_ACCESS_KEY_ID     = credentials('DPP_AWS_SECRET_ACCESS_ID')
+        AWS_SECRET_ACCESS_KEY = credentials('DPP_AWS_SECRET_ACCESS_KEY')
+        AWS_REGION            = 'us-east-1'
+        ADC_DOCKER_USER       = credentials('DPP_MX_ART_SA_USER')
+        ADC_DOCKER_PASSWORD   = credentials('DPP_MX_ART_SA_PASS')
+        VERACODE_API_ID       = credentials('VERACODE_API_ID')
+        VERACODE_API_KEY      = credentials('VERACODE_API_KEY')
+        VC_APP_NAME           = 'mscripts-dpp-api-gateway'
+        VC_SANDBOX_NAME       = 'Development'
+        EKS_CLUSTER_NAME      = "digital-pharmacy-dev-cluster"
+        VALUES_FILE_PATH      = "charts/eks-deployment/dev.values.yaml"
+        SERVICE_IMAGE         = "998585994771.dkr.ecr.us-east-1.amazonaws.com/dpp-mx-digital-pharmacy-gatway:${ENV}-${env.GIT_COMMIT}-${env.BUILD_NUMBER}"
+    }
+
+    stages {
+        stage('Source Jenkins Tasks') {
+            steps {
+                container('dpp-mx-jenkins-iac-agent'){
+                    withCredentials([gitUsernamePassword(credentialsId: 'dpp-github-service-user', gitToolName: 'Default')]) {
+                        sh '''
+                        echo "${SERVICE_IMAGE} --service image"
+
+                        echo "Cloning dpp-mx-shared-infrastructure-as-code repository" 
+                        git clone https://github.com/cahcommercial/dpp-mx-shared-infrastructure-as-code.git pipeline-tools-jenkins
+                        cd pipeline-tools-jenkins
+                        git branch ORN-182/gateway-pipline
+                        ls -l
+                        cd ../
+                        
+                        echo "Cloning dpp-infrastructure-as-code" 
+                        git clone https://github.com/cahcommercial/dpp-infrastructure-as-code.git pipeline-tools-chart
+                        
+                        cd pipeline-tools-chart
+                        git branch main
+                        
+                        ls -l
+                        cd ../
+                        ls -l
+                    '''
+                    }
+                }
+            }
+        }
+
+        stage('Run Test Cases') {
+            steps {
+                container('dpp-mx-jenkins-iac-agent') {
+                    try {
+                        echo 'RUNNING UNIT TEST CASES..'
+                        sh '/bin/sh ./pipeline-tools-jenkins/tasks/deploy/deploy.sh'
+                    }
+                    catch (exc) {
+                        echo 'UNIT TEST CASES FAILED!'
+                        currentBuild.result = 'FAILURE'
+                    }
+                }
+            }
+        }
+        stage('Build') {
+            steps {
+                container('dpp-mx-jenkins-iac-agent') {
+                    try {
+                        echo 'INITIATING BUILD..'
+                        sh '/bin/sh ./pipeline-tools-jenkins/tasks/build/build.sh'
+                    }
+                    catch (exc) {
+                        echo 'BUILD FAILED!'
+                        currentBuild.result = 'FAILURE'
+                    }
+                }
+            }
+        }
+        stage('Veracode scan') {
+            steps {
+                container('dpp-mx-jenkins-iac-agent') {
+                    sh '/bin/sh ./pipeline-tools-jenkins/tasks/veracode/veracode.sh'
+                }
+            }
+        }
+        stage('Sonarqube') {
+            steps {
+                container('dpp-mx-jenkins-iac-agent') {
+                    sh '/bin/sh ./pipeline-tools-jenkins/tasks/sonarqube/sonar.sh'
+                }
+            }
+        }
+        // stage('Deploy') {
+        //     steps {
+        //         container('dpp-mx-jenkins-iac-agent'){
+        //             withCredentials([gitUsernamePassword(credentialsId: 'dpp-github-service-user', gitToolName: 'Default')]) {
+        //                 sh '/bin/sh ./tasks/deploy.sh'
+        //             }
+        //         }
+        //     }
+        // } 
+    }
+}
+

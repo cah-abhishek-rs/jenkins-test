@@ -1,73 +1,48 @@
-FROM docker:latest
+# Build Stage
+FROM amazoncorretto:17-alpine AS base-build
 
-ENV KUBE_RUNNING_VERSION v1.2.7
-ENV HELM_VERSION v3.4.1
-ENV AWSCLI 2.7.15
-ENV TERRAFORM_VERSION 1.1.7
-ARG GLIBC_VERSION=2.31-r0
-ARG AWSCLI_VERSION=2.11.11
+# Update packages
+RUN apk update && apk upgrade && apk --no-cache add bash
 
-# install glibc compatibility for alpine
-RUN apk update && apk upgrade && apk --no-cache add \
-        binutils \
-        curl \
-        git \
-        python3 \
-        bash \
-        wget \
-    && curl -sL https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub -o /etc/apk/keys/sgerrand.rsa.pub \
-    && curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk \
-    && curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-bin-${GLIBC_VERSION}.apk \
-    && curl -sLO https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-i18n-${GLIBC_VERSION}.apk \
-    && apk add --no-cache --force-overwrite \
-        glibc-${GLIBC_VERSION}.apk \
-        glibc-bin-${GLIBC_VERSION}.apk \
-        glibc-i18n-${GLIBC_VERSION}.apk \
-    && /usr/glibc-compat/bin/localedef -i en_US -f UTF-8 en_US.UTF-8 \
-    && ln -sf /usr/glibc-compat/lib/ld-linux-x86-64.so.2 /lib64/ld-linux-x86-64.so.2 \
-    && curl -sL https://awscli.amazonaws.com/awscli-exe-linux-x86_64-${AWSCLI_VERSION}.zip -o awscliv2.zip \
-    && unzip awscliv2.zip \
-    && aws/install \
-    && rm -rf \
-        awscliv2.zip \
-        aws \
-        /usr/local/aws-cli/v2/current/dist/aws_completer \
-        /usr/local/aws-cli/v2/current/dist/awscli/data/ac.index \
-        /usr/local/aws-cli/v2/current/dist/awscli/examples \
-        glibc-*.apk \
-    && find /usr/local/aws-cli/v2/current/dist/awscli/botocore/data -name examples-1.json -delete 
+# Copy certificate into image
+COPY certs/CAH-Root-CA-PR1.cer ./certs/CAH-Root-CA-PR1.cer
+RUN keytool -importcert -file /certs/CAH-Root-CA-PR1.cer -alias CAH-Root-CA-PR1 -cacerts -storepass changeit -noprompt
 
+# Get gradle distribution
+WORKDIR /usr/app
+COPY *.gradle gradle.* gradlew ./
+COPY gradle/ ./gradle
+RUN ls -l
+RUN chmod +x ./gradlew && ./gradlew --version
 
-# Install Terraform
-RUN cd /usr/local/bin && \
-    curl https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip -o terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
-    unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
-    rm terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+# Build java project
+COPY gradlefiles/ ./gradlefiles/
+COPY src/ ./src/
 
-# Install kubectl
-RUN curl -L https://storage.googleapis.com/kubernetes-release/release/${KUBE_RUNNING_VERSION}/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl && \
-    chmod +x /usr/local/bin/kubectl
+RUN ./gradlew build
 
-# Install helm
-RUN wget https://get.helm.sh/helm-v3.4.1-linux-amd64.tar.gz -O - | tar -xzO linux-amd64/helm > /usr/local/bin/helm \
-  && chmod +x /usr/local/bin/helm
+RUN ls -l
 
+# Run Stage
+FROM amazoncorretto:17-alpine AS release-build
 
-# Install envsubst
-ENV BUILD_DEPS="gettext"  \
-    RUNTIME_DEPS="libintl"
+# Copy spring boot jar file
+WORKDIR /usr/app
 
-RUN set -x && \
-    apk add --update $RUNTIME_DEPS && \
-    apk add --virtual build_deps $BUILD_DEPS &&  \
-    cp /usr/bin/envsubst /usr/local/bin/envsubst && \
-    apk del build_deps
+RUN ls -l 
 
-RUN apk --no-cache del \
-        binutils \
-        curl \
-    && rm -rf /var/cache/apk/*
+COPY --from=base-build /usr/app/build/libs/dpp-mx-digital-pharmacy-gateway-0.0.1-SNAPSHOT-plain.jar ./dpp-mx-digital-pharmacy-gateway.jar
 
-WORKDIR /work
+RUN mkdir -p /veracode
 
-CMD ["helm", "version"]
+COPY --from=base-build /usr/app/build/libs/dpp-mx-digital-pharmacy-gateway-0.0.1-SNAPSHOT-plain.jar ./veracode/dpp-mx-digital-pharmacy-gateway.jar
+
+# Expose spring application port
+EXPOSE 8080
+
+# Set default spring profile
+ENV SPRING_PROFILES_ACTIVE=docker
+
+# Run spring boot application
+CMD ["java", "-jar", "dpp-mx-digital-pharmacy-gateway.jar"]
+

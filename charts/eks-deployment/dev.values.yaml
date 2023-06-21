@@ -1,0 +1,9 @@
+namespace: ${PROJECT_NAME}-${ENV}
+projectName: dpp-mx-digital-pharmacy-gateway
+configMapVariables:
+  SPRING_PROFILES_ACTIVE: ${ENV}
+deploymentReplicas: 1
+deploymentImage: artifacts.cahcommtech.com/gladiators/dp-my-scheduling:${IMAGE_TAG}
+containerPort: 8080
+servicePort: 8004
+imagePullSecret: regcred

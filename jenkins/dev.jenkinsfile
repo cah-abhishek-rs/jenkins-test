@@ -90,17 +90,17 @@ pipeline {
                             ls -l
 
                         '''
-                        dir('digital-pharmacy/pipeline-tools-jenkins/tasks/test') {
+                       // dir('digital-pharmacy/pipeline-tools-jenkins/tasks/test') {
                             try {
                                 echo 'RUNNING UNIT TEST CASES..'
                                 sh 'ls -l'
-                                sh 'test.sh'
+                                sh 'digital-pharmacy/pipeline-tools-jenkins/tasks/test.sh'
                             }
                             catch (exc) {
                                 echo 'UNIT TEST CASES FAILED!'
                                 currentBuild.result = 'FAILURE'
                             }
-                        }
+                        //}
                     }
                 }
             }

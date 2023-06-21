@@ -26,7 +26,7 @@ pipeline {
     }
 
     environment {
-        ENV                   = $ENV
+        ENV                   = 'dev'
         GIT_BRANCH            = "${env.GIT_BRANCH}"
         GIT_COMMIT_ID         = "${env.GIT_COMMIT}"
         PROJECT_NAME          = "MX-DIGITAL-PHARMACY-GATEWAY"
@@ -77,13 +77,15 @@ pipeline {
         stage('Run Test Cases') {
             steps {
                 container('dpp-mx-jenkins-iac-agent') {
-                    try {
-                        echo 'RUNNING UNIT TEST CASES..'
-                        sh '/bin/sh ./pipeline-tools-jenkins/tasks/deploy/deploy.sh'
-                    }
-                    catch (exc) {
-                        echo 'UNIT TEST CASES FAILED!'
-                        currentBuild.result = 'FAILURE'
+                    node {
+                        try {
+                            echo 'RUNNING UNIT TEST CASES..'
+                            sh '/bin/sh ./pipeline-tools-jenkins/tasks/deploy/deploy.sh'
+                        }
+                        catch (exc) {
+                            echo 'UNIT TEST CASES FAILED!'
+                            currentBuild.result = 'FAILURE'
+                        }
                     }
                 }
             }
@@ -91,13 +93,15 @@ pipeline {
         stage('Build') {
             steps {
                 container('dpp-mx-jenkins-iac-agent') {
-                    try {
-                        echo 'INITIATING BUILD..'
-                        sh '/bin/sh ./pipeline-tools-jenkins/tasks/build/build.sh'
-                    }
-                    catch (exc) {
-                        echo 'BUILD FAILED!'
-                        currentBuild.result = 'FAILURE'
+                    node {
+                        try {
+                            echo 'INITIATING BUILD..'
+                            sh '/bin/sh ./pipeline-tools-jenkins/tasks/build/build.sh'
+                        }
+                        catch (exc) {
+                            echo 'BUILD FAILED!'
+                            currentBuild.result = 'FAILURE'
+                        }
                     }
                 }
             }

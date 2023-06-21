@@ -85,27 +85,20 @@ pipeline {
         stage('Run Test Cases') {
             steps {
                 container('dpp-mx-jenkins-iac-agent') {
-                    script {
-                        sh '''
-                            ls -l
-
-                        '''
-                       // dir('digital-pharmacy/pipeline-tools-jenkins/tasks/test') {
+                        dir('digital-pharmacy/pipeline-tools-jenkins/tasks/test') {
                             try {
                                 echo 'RUNNING UNIT TEST CASES..'
                                 sh '''
-                                    'cd pipeline-tools-jenkins'
-                                    'ls -l'
-
+                                    ls -l
+                                    /bin/sh test.sh
                                 '''
                             }
                             catch (exc) {
                                 echo 'UNIT TEST CASES FAILED!'
                                 currentBuild.result = 'FAILURE'
                             }
-                        //}
+                        }
                     }
-                }
             }
         }
         stage('Build') {

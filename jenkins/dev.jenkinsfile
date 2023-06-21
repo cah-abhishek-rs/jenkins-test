@@ -10,7 +10,7 @@ pipeline {
         spec:
           containers:
           - name: dpp-mx-jenkins-iac-agent
-            image: 998585994771.dkr.ecr.us-east-1.amazonaws.com/dpp-mx-jenkins-iac-agent:latest
+            image: artifactory.infra.medrefill.com:5001/docker-local/dp/1.0.0
             command:
             - cat
             tty: true
@@ -62,30 +62,8 @@ pipeline {
                 container('dpp-mx-jenkins-iac-agent'){
                     withCredentials([gitUsernamePassword(credentialsId: 'DPP_JENKINS_GITHUB_SECRET_USER', gitToolName: 'Default')]) {
                         sh '''
-                        echo "${SERVICE_IMAGE} --service image"
-
-                        echo "Cloning dpp-mx-shared-infrastructure-as-code repository" 
-                        git clone https://github.com/cahcommercial/dpp-mx-shared-infrastructure-as-code.git pipeline-tools-jenkins
-                        cd pipeline-tools-jenkins
-                        git checkout ORN-182/gateway-pipline
-                        pwd
-                        ls -l
-                        cd jenkins/tasks/build
-                        ls -l
-                        cd ../../../../
-                        
-                        echo "Cloning dpp-infrastructure-as-code" 
-                        git clone https://github.com/cahcommercial/dpp-infrastructure-as-code.git pipeline-tools-chart
-                        
-                        cd pipeline-tools-chart
-                         pwd
-                        git checkout main
-                        
-                        ls -l
-                        cd ../
-                        ls -l
-                        pwd
-                    '''
+                            /bin/sh jenkins/tasks/setup.sh
+                        '''
                     }
                 }
             }
@@ -112,19 +90,18 @@ pipeline {
         }
         stage('Build') {
             steps {
-                container('dpp-mx-jenkins-iac-agent') {
+                container('dpp-mx-jenkins-app-agent') {
                     script {
-                        dir('digital-pharmacy/pipeline-tools-jenkins/tasks/build') {
-                            // try {
-                            //     echo 'INITIATING BUILD..'
-                            //     sh '''
-                            //         /bin/sh build.sh
-                            //     '''
-                            // }
-                            // catch (exc) {
-                            //     echo 'BUILD FAILED!'
-                            //     currentBuild.result = 'FAILURE'
-                            // }
+                        try {
+                            echo 'INITIATING BUILD..'
+                            sh '''
+                                ls -l
+                                /bin/sh pipeline-tools-jenkins/jenkins/tasks/build/build.sh
+                            '''
+                        }
+                        catch (exc) {
+                            echo 'BUILD FAILED!'
+                            currentBuild.result = 'FAILURE'
                         }
                     }
                 }
@@ -133,25 +110,21 @@ pipeline {
         stage('Veracode scan') {
             steps {
                 container('dpp-mx-jenkins-iac-agent') {
-                    dir('digital-pharmacy/pipeline-tools-jenkins/tasks/veracode') {
                         sh '''
-                            /bin/sh veracode.sh
+                            /bin/sh pipeline-tools-jenkins/jenkins/tasks/veracode/veracode.sh
                         '''
-                    }
                 }
             }
         }
-        stage('Sonarqube') {
-            steps {
-                container('dpp-mx-jenkins-iac-agent') {
-                    dir('digital-pharmacy/pipeline-tools-jenkins/tasks/sonarqube') {
-                        sh '''
-                            /bin/sh sonar.sh
-                        '''
-                    }  
-                }
-            }
-        }
+        // stage('Sonarqube') {
+        //     steps {
+        //         container('dpp-mx-jenkins-iac-agent') {
+        //                 sh '''
+        //                     /bin/sh pipeline-tools-jenkins/jenkins/tasks/sonar/sonar.sh
+        //                 ''' 
+        //         }
+        //     }
+        // }
         // stage('Deploy') {
         //     steps {
         //         container('dpp-mx-jenkins-iac-agent'){

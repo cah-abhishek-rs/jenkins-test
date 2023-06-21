@@ -89,7 +89,9 @@ pipeline {
                         dir('digital-pharmacy/pipeline-tools-jenkins/tasks/deploy') {
                             try {
                                 echo 'RUNNING UNIT TEST CASES..'
-                                sh '/bin/sh deploy.sh'
+                                sh '''
+                                    /bin/sh deploy.sh
+                                '''
                             }
                             catch (exc) {
                                 echo 'UNIT TEST CASES FAILED!'
@@ -107,7 +109,9 @@ pipeline {
                         dir('digital-pharmacy/pipeline-tools-jenkins/tasks/build') {
                             try {
                                 echo 'INITIATING BUILD..'
-                                sh '/bin/sh build.sh'
+                                sh '''
+                                    /bin/sh build.sh
+                                '''
                             }
                             catch (exc) {
                                 echo 'BUILD FAILED!'
@@ -122,7 +126,9 @@ pipeline {
             steps {
                 container('dpp-mx-jenkins-iac-agent') {
                     dir('digital-pharmacy/pipeline-tools-jenkins/tasks/veracode') {
-                        sh '/bin/sh veracode.sh'
+                        sh '''
+                            /bin/sh veracode.sh
+                        '''
                     }
                 }
             }
@@ -131,7 +137,9 @@ pipeline {
             steps {
                 container('dpp-mx-jenkins-iac-agent') {
                     dir('digital-pharmacy/pipeline-tools-jenkins/tasks/sonarqube') {
-                        sh '/bin/sh sonar.sh'
+                        sh '''
+                            /bin/sh sonar.sh
+                        '''
                     }  
                 }
             }

@@ -77,7 +77,7 @@ pipeline {
         stage('Run Test Cases') {
             steps {
                 container('dpp-mx-jenkins-iac-agent') {
-                    node {
+                    script {
                         try {
                             echo 'RUNNING UNIT TEST CASES..'
                             sh '/bin/sh ./pipeline-tools-jenkins/tasks/deploy/deploy.sh'
@@ -93,7 +93,7 @@ pipeline {
         stage('Build') {
             steps {
                 container('dpp-mx-jenkins-iac-agent') {
-                    node {
+                    script {
                         try {
                             echo 'INITIATING BUILD..'
                             sh '/bin/sh ./pipeline-tools-jenkins/tasks/build/build.sh'

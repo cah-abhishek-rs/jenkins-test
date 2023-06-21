@@ -94,7 +94,7 @@ pipeline {
                             try {
                                 echo 'RUNNING UNIT TEST CASES..'
                                 sh '''
-                                    'cd ./pipeline-tools-jenkins'
+                                    'cd pipeline-tools-jenkins'
                                     'ls -l'
 
                                 '''

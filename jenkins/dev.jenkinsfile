@@ -86,17 +86,21 @@ pipeline {
             steps {
                 container('dpp-mx-jenkins-iac-agent') {
                         dir('digital-pharmacy/pipeline-tools-jenkins/tasks/test') {
-                            try {
-                                echo 'RUNNING UNIT TEST CASES..'
-                                sh '''
+                            sh '''
                                     ls -l
                                     /bin/sh test.sh
                                 '''
-                            }
-                            catch (exc) {
-                                echo 'UNIT TEST CASES FAILED!'
-                                currentBuild.result = 'FAILURE'
-                            }
+                            // try {
+                            //     echo 'RUNNING UNIT TEST CASES..'
+                            //     sh '''
+                            //         ls -l
+                            //         /bin/sh test.sh
+                            //     '''
+                            // }
+                            // catch (exc) {
+                            //     echo 'UNIT TEST CASES FAILED!'
+                            //     currentBuild.result = 'FAILURE'
+                            // }
                         }
                     }
             }
@@ -106,16 +110,16 @@ pipeline {
                 container('dpp-mx-jenkins-iac-agent') {
                     script {
                         dir('digital-pharmacy/pipeline-tools-jenkins/tasks/build') {
-                            try {
-                                echo 'INITIATING BUILD..'
-                                sh '''
-                                    /bin/sh build.sh
-                                '''
-                            }
-                            catch (exc) {
-                                echo 'BUILD FAILED!'
-                                currentBuild.result = 'FAILURE'
-                            }
+                            // try {
+                            //     echo 'INITIATING BUILD..'
+                            //     sh '''
+                            //         /bin/sh build.sh
+                            //     '''
+                            // }
+                            // catch (exc) {
+                            //     echo 'BUILD FAILED!'
+                            //     currentBuild.result = 'FAILURE'
+                            // }
                         }
                     }
                 }

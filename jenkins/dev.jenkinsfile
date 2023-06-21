@@ -90,13 +90,10 @@ pipeline {
                             ls -l
 
                         '''
-                        dir('digital-pharmacy/pipeline-tools-jenkins/tasks/deploy') {
+                        dir('digital-pharmacy/pipeline-tools-jenkins/tasks/test') {
                             try {
                                 echo 'RUNNING UNIT TEST CASES..'
-                                sh '''
-                                    ls -l
-                                    /bin/sh deploy.sh
-                                '''
+                                sh 'test.sh'
                             }
                             catch (exc) {
                                 echo 'UNIT TEST CASES FAILED!'

@@ -86,10 +86,10 @@ pipeline {
             steps {
                 container('dpp-mx-jenkins-iac-agent') {
                     script {
-                        dir('digital-pharmacy/pipeline-tools-jenkins/tasks') {
+                        dir('digital-pharmacy/pipeline-tools-jenkins/tasks/deploy') {
                             try {
                                 echo 'RUNNING UNIT TEST CASES..'
-                                sh '/bin/sh deploy/deploy.sh'
+                                sh '/bin/sh deploy.sh'
                             }
                             catch (exc) {
                                 echo 'UNIT TEST CASES FAILED!'
@@ -104,10 +104,10 @@ pipeline {
             steps {
                 container('dpp-mx-jenkins-iac-agent') {
                     script {
-                        dir('digital-pharmacy/pipeline-tools-jenkins/tasks') {
+                        dir('digital-pharmacy/pipeline-tools-jenkins/tasks/build') {
                             try {
                                 echo 'INITIATING BUILD..'
-                                sh '/bin/sh build/build.sh'
+                                sh '/bin/sh build.sh'
                             }
                             catch (exc) {
                                 echo 'BUILD FAILED!'
@@ -121,8 +121,8 @@ pipeline {
         stage('Veracode scan') {
             steps {
                 container('dpp-mx-jenkins-iac-agent') {
-                    dir('digital-pharmacy/pipeline-tools-jenkins/tasks') {
-                        sh '/bin/sh veracode/veracode.sh'
+                    dir('digital-pharmacy/pipeline-tools-jenkins/tasks/veracode') {
+                        sh '/bin/sh veracode.sh'
                     }
                 }
             }
@@ -130,8 +130,8 @@ pipeline {
         stage('Sonarqube') {
             steps {
                 container('dpp-mx-jenkins-iac-agent') {
-                    dir('digital-pharmacy/pipeline-tools-jenkins/tasks') {
-                        sh '/bin/sh sonarqube/sonar.sh'
+                    dir('digital-pharmacy/pipeline-tools-jenkins/tasks/sonarqube') {
+                        sh '/bin/sh sonar.sh'
                     }  
                 }
             }

@@ -59,7 +59,8 @@ pipeline {
                         echo "Cloning dpp-mx-shared-infrastructure-as-code repository" 
                         git clone https://github.com/cahcommercial/dpp-mx-shared-infrastructure-as-code.git pipeline-tools-jenkins
                         cd pipeline-tools-jenkins
-                        git branch ORN-182/gateway-pipline
+                        git checkout ORN-182/gateway-pipline
+                        pwd
                         ls -l
                         cd ../
                         
@@ -67,7 +68,8 @@ pipeline {
                         git clone https://github.com/cahcommercial/dpp-infrastructure-as-code.git pipeline-tools-chart
                         
                         cd pipeline-tools-chart
-                        git branch main
+                         pwd
+                        git checkout main
                         
                         ls -l
                         cd ../

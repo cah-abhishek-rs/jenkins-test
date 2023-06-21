@@ -94,10 +94,9 @@ pipeline {
         stage('Run Test Cases') {
             steps {
                 container('dpp-mx-jenkins-app-agent') {
-                        dir('pipeline-tools-jenkins/jenkins/tasks/test/') {
                             sh '''
                                     ls -l
-                                    /bin/sh test.sh
+                                    /bin/sh pipeline-tools-jenkins/jenkins/tasks/test/test.sh
                                 '''
                             // try {
                             //     echo 'RUNNING UNIT TEST CASES..'
@@ -111,7 +110,6 @@ pipeline {
                             //     currentBuild.result = 'FAILURE'
                             // }
                         }
-                    }
             }
         }
         stage('Build') {

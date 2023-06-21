@@ -52,7 +52,7 @@ pipeline {
         stage('Source Jenkins Tasks') {
             steps {
                 container('dpp-mx-jenkins-iac-agent'){
-                    withCredentials([gitUsernamePassword(credentialsId: 'dpp-github-service-user', gitToolName: 'Default')]) {
+                    withCredentials([gitUsernamePassword(credentialsId: 'DPP_JENKINS_GITHUB_SECRET_USER', gitToolName: 'Default')]) {
                         sh '''
                         echo "${SERVICE_IMAGE} --service image"
 

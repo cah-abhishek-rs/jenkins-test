@@ -76,6 +76,7 @@ pipeline {
                         ls -l
                         cd ../
                         ls -l
+                        pwd
                     '''
                     }
                 }
@@ -85,10 +86,9 @@ pipeline {
         stage('Run Test Cases') {
             steps {
                 container('dpp-mx-jenkins-iac-agent') {
-                        dir('pipeline-tools-jenkins/jenkins/tasks/test') {
                             sh '''
                                     ls -l
-                                    /bin/sh test.sh
+                                    /bin/sh pipeline-tools-jenkins/jenkins/tasks/test/test.sh
                                 '''
                             // try {
                             //     echo 'RUNNING UNIT TEST CASES..'
@@ -101,8 +101,7 @@ pipeline {
                             //     echo 'UNIT TEST CASES FAILED!'
                             //     currentBuild.result = 'FAILURE'
                             // }
-                        }
-                    }
+                }
             }
         }
         stage('Build') {

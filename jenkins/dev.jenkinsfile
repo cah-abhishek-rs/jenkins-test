@@ -86,6 +86,10 @@ pipeline {
             steps {
                 container('dpp-mx-jenkins-iac-agent') {
                     script {
+                        sh '''
+                            ls -l
+
+                        '''
                         dir('digital-pharmacy/pipeline-tools-jenkins/tasks/deploy') {
                             try {
                                 echo 'RUNNING UNIT TEST CASES..'

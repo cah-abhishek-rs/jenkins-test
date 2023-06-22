@@ -111,6 +111,16 @@ pipeline {
                     '''
             }
         }
+
+        success {
+            container('dpp-mx-jenkins-iac-agent'){
+                    sh '''
+                        echo $SLACK_WEB_HOOK_URL $SLACK_CHANNEL
+                         curl -X POST -H 'Content-type: application/json' --data '{"text": "test", "channel" : ${SLACK_CHANNEL}}' ${SLACK_WEB_HOOK_URL}
+
+                    '''
+            }
+        }
     }
 }
 

@@ -1,16 +1,28 @@
 pipeline {
     agent {
-    kubernetes {
-      yaml """
+        kubernetes {
+            yaml '''
         apiVersion: v1
         kind: Pod
         metadata:
           labels:
-            name: jenkins-agent
+            name: dpp-mx-jenkins-iac-agent
         spec:
           containers:
           - name: dpp-mx-jenkins-iac-agent
-            image: 998585994771.dkr.ecr.us-east-1.amazonaws.com/dpp-mx-jenkins-iac-agent:latest
+            image: artifactory.infra.medrefill.com:5001/docker-local/digitial-pharmacy/jenkins-agent/iac/helm-aws-tf-kctl:1.0.0
+            imagePullSecrets:
+            - name: regcredjfrog
+            command:
+            - cat
+            tty: true
+            volumeMounts:
+              - name: dockersock
+                mountPath: "/var/run/docker.sock"
+          - name: dpp-mx-jenkins-app-agent
+            image: artifactory.infra.medrefill.com:5001/docker-local/digitial-pharmacy/jenkins-agent/app/correto-17:1.0.0
+            imagePullSecrets:
+            - name: regcredjfrog
             command:
             - cat
             tty: true
@@ -21,9 +33,9 @@ pipeline {
             - name: dockersock
               hostPath:
                 path: /var/run/docker.sock
-      """
+      '''
+        }
     }
-  }
 
     parameters {
         choice(name: 'ENV', choices: ['dev', 'uat', 'prod'], description: 'Selected environment for deployment')

@@ -9,7 +9,7 @@ pipeline {
             name: jenkins-agent
         spec:
           containers:
-          - name: jenkins-agent
+          - name: dpp-mx-jenkins-iac-agent
             image: 998585994771.dkr.ecr.us-east-1.amazonaws.com/dpp-mx-jenkins-iac-agent:latest
             command:
             - cat

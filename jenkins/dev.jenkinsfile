@@ -94,7 +94,7 @@ pipeline {
         stage('Veracode scan') {
             steps {
                 sh 'ls -l'
-                veracode applicationName: 'mscripts-dpp-api-gateway', version:"1", debug: true, criticality: 'VeryHigh', deleteIncompleteScanLevel: '0', fileNamePattern: '*', replacementPattern: '',createSandbox: true, sandboxName: 'Development', scanExcludesPattern: '', scanIncludesPattern: '**/**.jar', scanName: '$buildnumber-$timestamp', teams: 'Mscript', uploadIncludesPattern: '**/**.jar', vid: 'VERACODE_API_ID_1', vkey: 'VERACODE_API_KEY_2'
+                veracode applicationName: 'mscripts-dpp-api-gateway', debug: true, criticality: 'VeryHigh', deleteIncompleteScanLevel: '0', fileNamePattern: '*', replacementPattern: '',createSandbox: true, sandboxName: 'Development', scanExcludesPattern: '', scanIncludesPattern: '**/**.jar', scanName: '$buildnumber-$timestamp', teams: 'Mscript', uploadIncludesPattern: '**/**.jar', vid: 'VERACODE_API_ID_1', vkey: 'VERACODE_API_KEY_2'
                // veracode applicationName: '${VC_APP_NAME}', criticality: 'VeryHigh', deleteIncompleteScanLevel: '0', fileNamePattern: '*', replacementPattern: '', sandboxName: '${VC_SANDBOX_NAME}', scanExcludesPattern: '', scanIncludesPattern: '**/**.jar', scanName: '$buildnumber-$timestamp', teams: '${VERACODE_TEAMS}', uploadIncludesPattern: '**/**.jar', vid: ' ${VERACODE_API_ID}', vkey: '${VERACODE_API_KEY}'
             }
         }

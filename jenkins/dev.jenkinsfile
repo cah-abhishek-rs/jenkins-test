@@ -55,6 +55,7 @@ pipeline {
         VALUES_FILE_PATH      = "charts/eks-deployment/dev.values.yaml"
         SLACK_WEB_HOOK_URL    = credentials('SLACK_WEB_HOOK_URL')
         SLACK_CHANNEL         = "#test-dpp-gateway"
+        SLACK_MSG             = ""
         ECR_URL               = "998585994771.dkr.ecr.us-east-1.amazonaws.com"
         SERVICE_IMAGE         = "998585994771.dkr.ecr.us-east-1.amazonaws.com/dpp-mx-gateway:${ENV}-${env.GIT_COMMIT}-${env.BUILD_NUMBER}"
     }
@@ -133,7 +134,7 @@ pipeline {
         success {
             container('dpp-mx-jenkins-iac-agent'){
                     sh '''
-                         env.SLACK_MSG = "<!here> \nApp: `${PROJECT_NAME} \nTask: `docker-artifact-build` - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/$buildnumber/console| Failure>"
+                         env.SLACK_MSG = "<!here> \nApp: `${PROJECT_NAME} \nTask:  - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/$buildnumber/console| Failure>"
                          echo  "${SLACK_MSG}"
                          curl -X POST -H 'Content-type: application/json' --data '{"text": ${SLACK_MSG}, "channel" : ${SLACK_CHANNEL}}' ${SLACK_WEB_HOOK_URL}
 

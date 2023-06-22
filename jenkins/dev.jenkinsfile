@@ -64,43 +64,6 @@ pipeline {
             }
         }
 
-        stage('Run Test Cases') {
-            steps {
-                container('dpp-mx-jenkins-iac-agent') {
-                    script {
-                        try {
-                            echo 'RUNNING UNIT TEST CASES..'
-                            sh '''
-                                /bin/sh pipeline-tools-jenkins/jenkins/tasks/test/test.sh
-                            '''
-                        }
-                        catch (exc) {
-                            echo 'UNIT TEST CASES FAILED!'
-                            currentBuild.result = 'FAILURE'
-                        }
-                    }  
-                }
-            }
-        }
-
-        stage('Build') {
-            steps {
-                container('dpp-mx-jenkins-iac-agent') {
-                    script {
-                        try {
-                            echo 'INITIATING BUILD..'
-                            sh '''
-                                /bin/sh pipeline-tools-jenkins/jenkins/tasks/build/build.sh
-                            '''
-                        }
-                        catch (exc) {
-                            echo 'BUILD FAILED!'
-                            currentBuild.result = 'FAILURE'
-                        }
-                    }
-                }
-            }
-        }
 
         stage('Veracode scan') {
             steps {
@@ -108,36 +71,12 @@ pipeline {
                         // sh '''
                         //     /bin/sh pipeline-tools-jenkins/jenkins/tasks/veracode/veracode.sh
                         // '''
-
-                        withCredentials([ usernamePassword (
-                                 usernameVariable: 'VERACODE_API_ID', passwordVariable: 'VERACODE_API_KEY') ]) {
-                                    sh '''
-                                        veracode applicationName: '${VC_APP_NAME}', criticality: 'VeryHigh', deleteIncompleteScanLevel: '0', fileNamePattern: '', replacementPattern: '', sandboxName: '${VC_SANDBOX_NAME}', scanExcludesPattern: '', scanIncludesPattern: '', scanName: '$buildnumber-$timestamp', teams: '${VERACODE_TEAMS}', uploadIncludesPattern: '\'**/**.war, **/**.jar\'', vid: ' ${VERACODE_API_ID}', vkey: '${VERACODE_API_KEY}'
-                                    '''
-                        }  
+                sh '''
+                    veracode applicationName: '${VC_APP_NAME}', criticality: 'VeryHigh', deleteIncompleteScanLevel: '0', fileNamePattern: '', replacementPattern: '', sandboxName: '${VC_SANDBOX_NAME}', scanExcludesPattern: '', scanIncludesPattern: '', scanName: '$buildnumber-$timestamp', teams: '${VERACODE_TEAMS}', uploadIncludesPattern: '\'**/**.war, **/**.jar\'', vid: ' ${VERACODE_API_ID}', vkey: '${VERACODE_API_KEY}'
+                '''
                 }
             }
         }
-
-        // stage('Sonarqube') {
-        //     steps {
-        //         container('dpp-mx-jenkins-app-agent') {
-        //                 sh '''
-        //                     /bin/sh pipeline-tools-jenkins/jenkins/tasks/sonar/sonar.sh
-        //                 ''' 
-        //         }
-        //     }
-        // }
-        
-        // stage('Deploy') {
-        //     steps {
-        //         container('dpp-mx-jenkins-iac-agent'){
-        //             withCredentials([gitUsernamePassword(credentialsId: 'dpp-github-service-user', gitToolName: 'Default')]) {
-        //                 sh '/bin/sh ./tasks/deploy.sh'
-        //             }
-        //         }
-        //     }
-        // } 
     }
 
   
@@ -147,7 +86,7 @@ pipeline {
             container('dpp-mx-jenkins-iac-agent'){
                     sh '''
                         echo $SLACK_WEB_HOOK_URL $SLACK_CHANNEL
-                         curl -X POST -H 'Content-type: application/json' --data '{"text": "test", "channel" : "#test-dpp-gateway"}' ${SLACK_WEB_HOOK_URL}
+                         curl -X POST -H 'Content-type: application/json' --data '{"text": "test", "channel" : ${SLACK_CHANNEL}}' ${SLACK_WEB_HOOK_URL}
 
                     '''
             }

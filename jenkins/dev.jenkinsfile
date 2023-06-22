@@ -123,7 +123,7 @@ pipeline {
         failure {
             container('dpp-mx-jenkins-iac-agent'){
                     sh '''
-                         env.SLACK_MSG = "test"
+                         SLACK_MSG="test"
                          echo  "${SLACK_MSG}"
                          curl -X POST -H 'Content-type: application/json' --data '{"text": "${SLACK_MSG}" , "channel" : "${SLACK_CHANNEL}"}' ${SLACK_WEB_HOOK_URL}
 
@@ -134,7 +134,7 @@ pipeline {
         success {
             container('dpp-mx-jenkins-iac-agent'){
                     sh '''
-                         env.SLACK_MSG = "<!here> \nApp: `${PROJECT_NAME} \nTask:  - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/$buildnumber/console| Failure>"
+                         SLACK_MSG="<!here> App: ${PROJECT_NAME} Task:  - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/$buildnumber/console| Failure>"
                          echo  "${SLACK_MSG}"
                          curl -X POST -H 'Content-type: application/json' --data '{"text": ${SLACK_MSG}, "channel" : ${SLACK_CHANNEL}}' ${SLACK_WEB_HOOK_URL}
 

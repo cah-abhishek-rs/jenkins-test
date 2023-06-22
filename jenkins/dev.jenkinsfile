@@ -147,7 +147,7 @@ pipeline {
             container('dpp-mx-jenkins-iac-agent'){
                     sh '''
                         echo 'Sending slack notification!'
-                        $SLACK_MSG = "<!here> \nApp: `dp-my-scheduling` \nTask: `docker-artifact-build` - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/$BUILD_ID/console| Failure>"
+                        $SLACK_MSG = "<!here> \nApp: `${PROJECT_NAME} \nTask: `docker-artifact-build` - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/$BUILD_ID/console| Failure>"
                         # Send Notification
                         echo "Sending notification to slack channel"
                         curl -X POST -H 'Content-type: application/json' --data '{"text": ${SLACK_MSG}, "channel" : ${SLACK_CHANNEL}}' ${SLACK_WEB_HOOK_URL}

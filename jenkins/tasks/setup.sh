@@ -15,5 +15,5 @@ cd ..
 echo "Cloning dpp-infrastructure-as-code" 
 git clone https://github.com/cahcommercial/dpp-infrastructure-as-code.git pipeline-tools-charts
 
-ls -l
+
 

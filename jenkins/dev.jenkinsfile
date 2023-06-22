@@ -113,24 +113,24 @@ pipeline {
             }
         }
 
-        // stage('Deploy') {
-        //     steps {
-        //         container('dpp-mx-jenkins-iac-agent') {
-        //             script {
-        //                 try {
-        //                     sh '''
-        //                         echo 'INITIATING DEPLOYMENT..'
-        //                         /bin/sh pipeline-tools-jenkins/jenkins/tasks/deploy/deploy.sh
-        //                     '''
-        //                 }
-        //                 catch (exc) {
-        //                     echo 'DEPLOYMENT FAILED!'
-        //                     currentBuild.result = 'FAILURE'
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Deploy') {
+            steps {
+                container('dpp-mx-jenkins-iac-agent') {
+                    script {
+                        try {
+                            sh '''
+                                echo 'INITIATING DEPLOYMENT..'
+                                /bin/sh pipeline-tools-jenkins/jenkins/tasks/deploy/deploy.sh
+                            '''
+                        }
+                        catch (exc) {
+                            echo 'DEPLOYMENT FAILED!'
+                            currentBuild.result = 'FAILURE'
+                        }
+                    }
+                }
+            }
+        }
     }
              
     post {

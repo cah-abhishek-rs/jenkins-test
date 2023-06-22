@@ -123,7 +123,7 @@ pipeline {
         failure {
             container('dpp-mx-jenkins-iac-agent'){
                     sh '''
-                         SLACK_MSG = "<!here> \nApp: `${PROJECT_NAME} \nTask: `docker-artifact-build` - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/$buildnumber/console| Failure>"
+                         #SLACK_MSG = "<!here> \nApp: `${PROJECT_NAME} \nTask: `docker-artifact-build` - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/$buildnumber/console| Failure>"
                          curl -X POST -H 'Content-type: application/json' --data '{"text": ${SLACK_MSG} , "channel" : ${SLACK_CHANNEL}}' ${SLACK_WEB_HOOK_URL}
 
                     '''
@@ -133,7 +133,7 @@ pipeline {
         success {
             container('dpp-mx-jenkins-iac-agent'){
                     sh '''
-                         SLACK_MSG = "<!here> \nApp: `${PROJECT_NAME} \nTask: `docker-artifact-build` - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/$buildnumber/console| Failure>"
+                         #SLACK_MSG = "<!here> \nApp: `${PROJECT_NAME} \nTask: `docker-artifact-build` - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/$buildnumber/console| Failure>"
                          curl -X POST -H 'Content-type: application/json' --data '{"text": ${SLACK_MSG}, "channel" : ${SLACK_CHANNEL}}' ${SLACK_WEB_HOOK_URL}
 
                     '''

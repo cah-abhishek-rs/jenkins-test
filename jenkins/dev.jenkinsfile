@@ -10,7 +10,7 @@ pipeline {
         spec:
           containers:
           - name: dpp-mx-jenkins-iac-agent
-            image: https://artifactory.remscripts.com:443/artifactory/docker-local/digitial-pharmacy/jenkins-agent/iac/helm-aws-tf-kctl/1.0.0
+            image: artifactory.infra.medrefill.com:5001/docker-local/digitial-pharmacy/jenkins-agent/iac/helm-aws-tf-kctl:1.0.0
             imagePullSecrets:
             - name: regcredjfrog
             command:
@@ -20,7 +20,7 @@ pipeline {
               - name: dockersock
                 mountPath: "/var/run/docker.sock"
           - name: dpp-mx-jenkins-app-agent
-            image: https://artifactory.remscripts.com:443/artifactory/docker-local/digitial-pharmacy/jenkins-agent/app/correto-17/1.0.0
+            image: artifactory.infra.medrefill.com:5001/docker-local/digitial-pharmacy/jenkins-agent/app/correto-17:1.0.0
             imagePullSecrets:
             - name: regcredjfrog
             command:

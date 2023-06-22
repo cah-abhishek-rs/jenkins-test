@@ -57,6 +57,7 @@ pipeline {
         SLACK_MSG             = ""
         ECR_URL               = "998585994771.dkr.ecr.us-east-1.amazonaws.com"
         SERVICE_IMAGE         = "998585994771.dkr.ecr.us-east-1.amazonaws.com/dpp-mx-gateway:${ENV}-${env.GIT_COMMIT}-${env.BUILD_NUMBER}"
+        IMAGE_TAG             = "${ENV}-${env.GIT_COMMIT}-${env.BUILD_NUMBER}"
     }
 
     stages {

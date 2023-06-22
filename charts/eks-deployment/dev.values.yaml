@@ -1,9 +1,8 @@
-namespace: ${PROJECT_NAME}-${ENV}
+namespace: ${PROJECT}-${ENV}
 projectName: dpp-mx-digital-pharmacy-gateway
 configMapVariables:
   SPRING_PROFILES_ACTIVE: ${ENV}
 deploymentReplicas: 1
-deploymentImage: artifacts.cahcommtech.com/gladiators/dp-my-scheduling:${IMAGE_TAG}
+deploymentImage: 998585994771.dkr.ecr.us-east-1.amazonaws.com/dpp-mx-gateway:${IMAGE_TAG}
 containerPort: 8080
 servicePort: 8004
-imagePullSecret: regcred

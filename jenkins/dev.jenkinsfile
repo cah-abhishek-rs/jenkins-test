@@ -45,8 +45,9 @@ pipeline {
         VC_SANDBOX_NAME       = 'Development'
         EKS_CLUSTER_NAME      = "digital-pharmacy-dev-cluster"
         VALUES_FILE_PATH      = "charts/eks-deployment/dev.values.yaml"
-        SLACK_WEB_HOOK_URL    = ""
+        SLACK_WEB_HOOK_URL    = credentials('SLACK_WEB_HOOK_URL')
         SLACK_MSG             = ""
+        SLACK_CHANNEL         = "#test-dpp-gateway"
         SERVICE_IMAGE         = "artifactory.infra.medrefill.com:5001/docker-local/digitial-pharmacy/application/dpp-mx-digital-pharmacy-gateway:${ENV}-${env.GIT_COMMIT}-${env.BUILD_NUMBER}"
     }
 
@@ -65,7 +66,7 @@ pipeline {
 
         stage('Run Test Cases') {
             steps {
-                container('dpp-mx-jenkins-app-agent') {
+                container('dpp-mx-jenkins-iac-agent') {
                     script {
                         try {
                             echo 'RUNNING UNIT TEST CASES..'
@@ -84,7 +85,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                container('dpp-mx-jenkins-app-agent') {
+                container('dpp-mx-jenkins-iac-agent') {
                     script {
                         try {
                             echo 'INITIATING BUILD..'
@@ -108,7 +109,8 @@ pipeline {
                         //     /bin/sh pipeline-tools-jenkins/jenkins/tasks/veracode/veracode.sh
                         // '''
                         sh '''
-                            withCredentials([ usernamePassword ( credentialsId: 'veracode_login', usernameVariable: 'VERACODE_API_ID', passwordVariable: 'VERACODE_API_KEY') ]){
+                        withCredentials([ usernamePassword (
+        credentialsId: 'veracode_login', usernameVariable: 'VERACODE_API_ID', passwordVariable: 'VERACODE_API_KEY') ]) {
                             veracode applicationName: '${VC_APP_NAME}', criticality: 'VeryHigh', deleteIncompleteScanLevel: '0', fileNamePattern: '', replacementPattern: '', sandboxName: '${VC_SANDBOX_NAME}', scanExcludesPattern: '', scanIncludesPattern: '', scanName: '$buildnumber-$timestamp', teams: '${VERACODE_TEAMS}', uploadIncludesPattern: '\'**/**.war, **/**.jar\'', vid: ' ${VERACODE_API_ID}', vkey: '${VERACODE_API_KEY}'
                         }
                         '''
@@ -140,19 +142,17 @@ pipeline {
   
 
     post {
-        success {
-            slackSend channel: '#test-dpp-gateway',
-            color: 'good',
-            botUser: true,
-            message: "The pipeline ${currentBuild.fullDisplayName} completed successfully."
-        }
-
         failure {
-            slackSend channel: '#test-dpp-gateway',
-            color: 'good',
-            botUser: true,
-            message: "The pipeline ${currentBuild.fullDisplayName} failed."
+            container('dpp-mx-jenkins-iac-agent'){
+                    sh '''
+                        echo 'Sending slack notification!'
+                        $SLACK_MSG = "<!here> \nApp: `dp-my-scheduling` \nTask: `docker-artifact-build` - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/$BUILD_ID/console| Failure>"
+                        # Send Notification
+                        echo "Sending notification to slack channel"
+                        curl -X POST -H 'Content-type: application/json' --data '{"text": ${SLACK_MSG}, "channel" : ${SLACK_CHANNEL}' ${SLACK_WEB_HOOK_URL}
+                        /bin/sh pipeline-tools-jenkins/jenkins/tasks/slack/notification.sh
+                    '''
+            }
         }
-    }
 }
 

@@ -124,7 +124,7 @@ pipeline {
             container('dpp-mx-jenkins-iac-agent'){
                     sh '''
                          SLACK_MSG="<!here> App: ${PROJECT_NAME} Task:  - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/$buildnumber/console| Failure>"
-                         bin/sh pipeline-tools-jenkins/jenkins/tasks/slack/notification.sh
+                         /bin/sh pipeline-tools-jenkins/jenkins/tasks/slack/notification.sh
 
                     '''
             }
@@ -134,7 +134,7 @@ pipeline {
             container('dpp-mx-jenkins-iac-agent'){
                     sh '''
                          SLACK_MSG="<!here> App: ${PROJECT_NAME} Task:  - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/$buildnumber/console| Failure>"
-                         bin/sh pipeline-tools-jenkins/jenkins/tasks/slack/notification.sh
+                         /bin/sh pipeline-tools-jenkins/jenkins/tasks/slack/notification.sh
                     '''
             }
         }

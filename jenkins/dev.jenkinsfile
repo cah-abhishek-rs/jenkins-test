@@ -56,7 +56,7 @@ pipeline {
         SLACK_WEB_HOOK_URL    = credentials('SLACK_WEB_HOOK_URL')
         SLACK_MSG             = ""
         SLACK_CHANNEL         = "#test-dpp-gateway"
-        SERVICE_IMAGE         = "artifactory.infra.medrefill.com:5001/docker-local/digitial-pharmacy/application/dpp-mx-digital-pharmacy-gateway:${ENV}-${env.GIT_COMMIT}-${env.BUILD_NUMBER}"
+        SERVICE_IMAGE         = "998585994771.dkr.ecr.us-east-1.amazonaws.com/dpp-mx-gateway:${ENV}-${env.GIT_COMMIT}-${env.BUILD_NUMBER}"
     }
 
     stages {

@@ -10,7 +10,7 @@ pipeline {
         spec:
           containers:
           - name: jenkins-agent
-            image: 998585994771.dkr.ecr.us-east-1.amazonaws.com/adc-jenkins-build-agent:latest
+            image: 998585994771.dkr.ecr.us-east-1.amazonaws.com/dpp-mx-jenkins-iac-agent:latest
             command:
             - cat
             tty: true

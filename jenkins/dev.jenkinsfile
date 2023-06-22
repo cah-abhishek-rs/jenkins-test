@@ -6,7 +6,7 @@ pipeline {
         kind: Pod
         metadata:
           labels:
-            name: dpp-mx-jenkins-iac-agent
+            name: dpp-mx-jenkins-agent
         spec:
           containers:
           - name: dpp-mx-jenkins-iac-agent
@@ -17,7 +17,7 @@ pipeline {
             volumeMounts:
               - name: dockersock
                 mountPath: "/var/run/docker.sock"
-            - name: dpp-mx-jenkins-app-agent
+          - name: dpp-mx-jenkins-app-agent
             image: 998585994771.dkr.ecr.us-east-1.amazonaws.com/dpp-mx-jenkins-iac-agent:latest
             command:
             - cat
@@ -25,7 +25,7 @@ pipeline {
             volumeMounts:
               - name: dockersock
                 mountPath: "/var/run/docker.sock"
-          volumes:
+           volumes:
             - name: dockersock
               hostPath:
                 path: /var/run/docker.sock

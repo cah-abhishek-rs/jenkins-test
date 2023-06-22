@@ -66,6 +66,7 @@ pipeline {
                 container('dpp-mx-jenkins-iac-agent'){
                     withCredentials([gitUsernamePassword(credentialsId: 'DPP_JENKINS_GITHUB_SECRET_USER', gitToolName: 'Default')]) {
                         sh '''
+                            echo 'SETUP JENKINS TASKS RESOURCE FILES..  '
                             /bin/sh jenkins/tasks/setup.sh
                         '''
                     }
@@ -135,6 +136,7 @@ pipeline {
         always {
             container('dpp-mx-jenkins-app-agent'){
                 sh '''
+                 echo 'BUILDING JAR/WAR FILE FOR VERACODE SCAN..'
                  /bin/sh pipeline-tools-jenkins/jenkins/tasks/veracode/veracode-build.sh
                 '''
             } 
@@ -143,6 +145,7 @@ pipeline {
         failure {
             container('dpp-mx-jenkins-iac-agent'){
                     sh '''
+                        echo 'SEND SLCAK NOTIFICATIONS..'
                          SLACK_MSG="<!here> App: ${PROJECT} Task:  - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/$buildnumber/console| Failure>"
                          /bin/sh pipeline-tools-jenkins/jenkins/tasks/slack/notification.sh
                     '''

@@ -41,7 +41,7 @@ pipeline {
         ENV                   = 'dev'
         GIT_BRANCH            = "${env.GIT_BRANCH}"
         GIT_COMMIT_ID         = "${env.GIT_COMMIT}"
-        PROJECT_NAME          = "MX-DIGITAL-PHARMACY-GATEWAY"
+        PROJECT               = "dpp-mx-digital-pharmacy-gateway"
         AWS_ACCESS_KEY_ID     = credentials('DPP_AWS_SECRET_ACCESS_ID')
         AWS_SECRET_ACCESS_KEY = credentials('DPP_AWS_SECRET_ACCESS_KEY')
         AWS_REGION            = 'us-east-1'
@@ -115,13 +115,14 @@ pipeline {
     post {
         always {
                 sh '''
+                    /bin/sh pipeline-tools-jenkins/jenkins/tasks/veracode/veracode.sh
                     veracode applicationName: "${VC_APP_NAME}", canFailJob: false, waitForScan: false, criticality: "VeryHigh" , debug: true, deleteIncompleteScanLevel: '0', fileNamePattern: '', replacementPattern: '', sandboxName: '', scanExcludesPattern: '', scanIncludesPattern: '**/**.war, **/**.jar', scanName: '$buildnumber-$timestamp', teams: '', uploadIncludesPattern: 'veracode/**/**.war, veracode/**/**.jar', vid: "${VERACODE_API_ID}", vkey: "${VERACODE_API_KEY}"
                 '''
             }
         failure {
             container('dpp-mx-jenkins-iac-agent'){
                     sh '''
-                         SLACK_MSG="<!here> App: ${PROJECT_NAME} Task:  - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/$buildnumber/console| Failure>"
+                         SLACK_MSG="<!here> App: ${PROJECT} Task:  - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/$buildnumber/console| Failure>"
                          /bin/sh pipeline-tools-jenkins/jenkins/tasks/slack/notification.sh
 
                     '''
@@ -131,7 +132,7 @@ pipeline {
         success {
             container('dpp-mx-jenkins-iac-agent'){
                     sh '''
-                         SLACK_MSG="<!here> App: ${PROJECT_NAME} Task:  - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/$buildnumber/console| Failure>"
+                         SLACK_MSG="<!here> App: ${PROJECT} Task:  - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/$buildnumber/console| Failure>"
                          /bin/sh pipeline-tools-jenkins/jenkins/tasks/slack/notification.sh
                     '''
             }

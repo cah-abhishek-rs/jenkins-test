@@ -47,8 +47,8 @@ pipeline {
         AWS_REGION            = 'us-east-1'
         ADC_DOCKER_USER       = credentials('DPP_MX_ART_SA_USER')
         ADC_DOCKER_PASSWORD   = credentials('DPP_MX_ART_SA_PASS')
-        VERACODE_API_ID       = credentials(VERACODE_API_ID)
-        VERACODE_API_KEY     = credentials(VERACODE_API_KEY)
+        VERACODE_API_ID       = credentials('VERACODE_API_ID')
+        VERACODE_API_KEY     = credentials('VERACODE_API_KEY')
         VC_APP_NAME           = 'mscripts-dpp-api-gateway'
         VC_SANDBOX_NAME       = 'Development'
         EKS_CLUSTER_NAME      = "digital-pharmacy-dev-cluster"

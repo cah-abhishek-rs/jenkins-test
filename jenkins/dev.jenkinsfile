@@ -74,62 +74,62 @@ pipeline {
             }
         }
 
-        // stage('Run Test Cases') {
-        //     steps {
-        //         container('dpp-mx-jenkins-app-agent') {
-        //             script {
-        //                 try {
-        //                     echo 'RUNNING UNIT TEST CASES..'
-        //                     sh '''
-        //                         /bin/sh pipeline-tools-jenkins/jenkins/tasks/test/test.sh
-        //                     '''
-        //                 }
-        //                 catch (exc) {
-        //                     echo 'UNIT TEST CASES FAILED!'
-        //                     currentBuild.result = 'FAILURE'
-        //                 }
-        //             }  
-        //         }
-        //     }
-        // }
+        stage('Run Test Cases') {
+            steps {
+                container('dpp-mx-jenkins-app-agent') {
+                    script {
+                        try {
+                            echo 'RUNNING UNIT TEST CASES..'
+                            sh '''
+                                /bin/sh pipeline-tools-jenkins/jenkins/tasks/test/test.sh
+                            '''
+                        }
+                        catch (exc) {
+                            echo 'UNIT TEST CASES FAILED!'
+                            currentBuild.result = 'FAILURE'
+                        }
+                    }  
+                }
+            }
+        }
 
-        // stage('Build') {
-        //     steps {
-        //         container('dpp-mx-jenkins-app-agent') {
-        //             script {
-        //                 try {
-        //                     echo 'INITIATING BUILD..'
-        //                     sh '''
-        //                         /bin/sh pipeline-tools-jenkins/jenkins/tasks/build/build.sh
-        //                     '''
-        //                 }
-        //                 catch (exc) {
-        //                     echo 'BUILD FAILED!'
-        //                     currentBuild.result = 'FAILURE'
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Build') {
+            steps {
+                container('dpp-mx-jenkins-app-agent') {
+                    script {
+                        try {
+                            echo 'INITIATING BUILD..'
+                            sh '''
+                                /bin/sh pipeline-tools-jenkins/jenkins/tasks/build/build.sh
+                            '''
+                        }
+                        catch (exc) {
+                            echo 'BUILD FAILED!'
+                            currentBuild.result = 'FAILURE'
+                        }
+                    }
+                }
+            }
+        }
 
-        // stage('Deploy') {
-        //     steps {
-        //         container('dpp-mx-jenkins-iac-agent') {
-        //             script {
-        //                 try {
-        //                     echo 'INITIATING DEPLOYMENT..'
-        //                     sh '''
-        //                         /bin/sh pipeline-tools-jenkins/jenkins/tasks/deploy/deploy.sh
-        //                     '''
-        //                 }
-        //                 catch (exc) {
-        //                     echo 'DEPLOYMENT FAILED!'
-        //                     currentBuild.result = 'FAILURE'
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Deploy') {
+            steps {
+                container('dpp-mx-jenkins-iac-agent') {
+                    script {
+                        try {
+                            echo 'INITIATING DEPLOYMENT..'
+                            sh '''
+                                /bin/sh pipeline-tools-jenkins/jenkins/tasks/deploy/deploy.sh
+                            '''
+                        }
+                        catch (exc) {
+                            echo 'DEPLOYMENT FAILED!'
+                            currentBuild.result = 'FAILURE'
+                        }
+                    }
+                }
+            }
+        }
     }
              
     post {

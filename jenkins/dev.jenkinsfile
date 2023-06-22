@@ -45,14 +45,12 @@ pipeline {
         AWS_ACCESS_KEY_ID     = credentials('DPP_AWS_SECRET_ACCESS_ID')
         AWS_SECRET_ACCESS_KEY = credentials('DPP_AWS_SECRET_ACCESS_KEY')
         AWS_REGION            = 'us-east-1'
+        EKS_CLUSTER_NAME      = "digital-pharmacy-dev-cluster"
         ADC_DOCKER_USER       = credentials('DPP_MX_ART_SA_USER')
         ADC_DOCKER_PASSWORD   = credentials('DPP_MX_ART_SA_PASS')
         VERACODE_API_ID       = credentials('VERACODE_API_ID')
         VERACODE_API_KEY      = credentials('VERACODE_API_KEY')
         VC_APP_NAME           = 'mscripts-dpp-api-gateway'
-        VC_SANDBOX_NAME       = 'Development'
-        VC_CRITICALITY        = 'VeryHigh'
-        EKS_CLUSTER_NAME      = "digital-pharmacy-dev-cluster"
         VALUES_FILE_PATH      = "charts/eks-deployment/dev.values.yaml"
         SLACK_WEB_HOOK_URL    = credentials('SLACK_WEB_HOOK_URL')
         SLACK_CHANNEL         = "#test-dpp-gateway"
@@ -117,7 +115,7 @@ pipeline {
     post {
         always {
                 sh '''
-                    /bin/sh pipeline-tools-jenkins/jenkins/tasks/veracode/veracode.sh
+                    veracode applicationName: "${VC_APP_NAME}", canFailJob: false, waitForScan: false, criticality: "VeryHigh" , debug: true, deleteIncompleteScanLevel: '0', fileNamePattern: '', replacementPattern: '', sandboxName: '', scanExcludesPattern: '', scanIncludesPattern: '**/**.war, **/**.jar', scanName: '$buildnumber-$timestamp', teams: '', uploadIncludesPattern: 'veracode/**/**.war, veracode/**/**.jar', vid: "${VERACODE_API_ID}", vkey: "${VERACODE_API_KEY}"
                 '''
             }
         failure {

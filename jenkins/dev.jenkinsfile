@@ -1,29 +1,29 @@
 pipeline {
     agent {
-        kubernetes {
-            yaml '''
+    kubernetes {
+      yaml """
         apiVersion: v1
         kind: Pod
         metadata:
           labels:
-            name: dpp-mx-jenkins-agent
+            name: jenkins-agent
         spec:
           containers:
-          - name: dpp-mx-jenkins-iac-agent
-            image: 998585994771.dkr.ecr.us-east-1.amazonaws.com/dpp-mx-jenkins-iac-agent:latest
+          - name: jenkins-agent
+            image: 998585994771.dkr.ecr.us-east-1.amazonaws.com/adc-jenkins-build-agent:latest
             command:
             - cat
             tty: true
             volumeMounts:
               - name: dockersock
                 mountPath: "/var/run/docker.sock"
-           volumes:
+          volumes:
             - name: dockersock
               hostPath:
                 path: /var/run/docker.sock
-      '''
-        }
+      """
     }
+  }
 
     parameters {
         choice(name: 'ENV', choices: ['dev', 'uat', 'prod'], description: 'Selected environment for deployment')
@@ -109,28 +109,28 @@ pipeline {
                         // '''
                         sh '''
                             withCredentials(
-                                [ 
-                                        usernamePassword (
-                                                credentialsId: 'veracode_login', 
-                                                usernameVariable: 'VERACODE_API_ID', 
-                                                passwordVariable: 'VERACODE_API_KEY'
-                                        ) 
-                                ]
-                            ){
-                                veracode applicationName: ${VC_APP_NAME}, 
-                                criticality: 'VeryHigh',
-                                deleteIncompleteScanLevel: '0', 
-                                fileNamePattern: '', 
-                                replacementPattern: '', 
-                                sandboxName: ${VC_SANDBOX_NAME} , 
-                                scanExcludesPattern: '', 
-                                scanIncludesPattern: '', 
-                                scanName: '$buildnumber-$timestamp',
-                                teams: 'mscripts', 
-                                uploadIncludesPattern: '**/**.war, **/**.jar', 
-                                vid: ${VERACODE_API_ID}, 
-                                vkey: ${VERACODE_API_KEY}
-                            }
+                            [ 
+                                    usernamePassword (
+                                            credentialsId: 'veracode_login', 
+                                            usernameVariable: 'VERACODE_API_ID', 
+                                            passwordVariable: 'VERACODE_API_KEY'
+                                    ) 
+                            ]
+                        ){
+                            veracode applicationName: ${VC_APP_NAME}, 
+                            criticality: 'VeryHigh',
+                            deleteIncompleteScanLevel: '0', 
+                            fileNamePattern: '', 
+                            replacementPattern: '', 
+                            sandboxName: ${VC_SANDBOX_NAME} , 
+                            scanExcludesPattern: '', 
+                            scanIncludesPattern: '', 
+                            scanName: '$buildnumber-$timestamp',
+                            teams: 'mscripts', 
+                            uploadIncludesPattern: '**/**.war, **/**.jar', 
+                            vid: ${VERACODE_API_ID}, 
+                            vkey: ${VERACODE_API_KEY}
+                        }
                         '''
                 }
             }

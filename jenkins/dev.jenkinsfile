@@ -117,7 +117,7 @@ pipeline {
             container('dpp-mx-jenkins-app-agent'){
                 sh '''
                     /bin/sh pipeline-tools-jenkins/jenkins/tasks/veracode/veracode-build.sh
-                    ./gradlew build
+                    chmod +x ./gradlew 
                     cp -R build/libs/$PROJECT*.jar $ENTRYPOINT/veracode
                     veracode applicationName: "${VC_APP_NAME}", canFailJob: false, waitForScan: false, criticality: "VeryHigh" , debug: true, deleteIncompleteScanLevel: '0', fileNamePattern: '', replacementPattern: '', sandboxName: '', scanExcludesPattern: '', scanIncludesPattern: '**/**.war, **/**.jar', scanName: '$buildnumber-$timestamp', teams: '', uploadIncludesPattern: 'veracode/**/**.war, veracode/**/**.jar', vid: "${VERACODE_API_ID}", vkey: "${VERACODE_API_KEY}"
                 '''

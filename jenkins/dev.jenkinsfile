@@ -114,21 +114,23 @@ pipeline {
 
     post {
         always {
+            container('dpp-mx-jenkins-app-agent'){
                 sh '''
                     /bin/sh pipeline-tools-jenkins/jenkins/tasks/veracode/veracode-build.sh
+                    ./gradlew build
+                    cp -R build/libs/$PROJECT*.jar $ENTRYPOINT/veracode
                     veracode applicationName: "${VC_APP_NAME}", canFailJob: false, waitForScan: false, criticality: "VeryHigh" , debug: true, deleteIncompleteScanLevel: '0', fileNamePattern: '', replacementPattern: '', sandboxName: '', scanExcludesPattern: '', scanIncludesPattern: '**/**.war, **/**.jar', scanName: '$buildnumber-$timestamp', teams: '', uploadIncludesPattern: 'veracode/**/**.war, veracode/**/**.jar', vid: "${VERACODE_API_ID}", vkey: "${VERACODE_API_KEY}"
                 '''
-            }
+            }    
+        }
         failure {
             container('dpp-mx-jenkins-iac-agent'){
                     sh '''
                          SLACK_MSG="<!here> App: ${PROJECT} Task:  - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/$buildnumber/console| Failure>"
                          /bin/sh pipeline-tools-jenkins/jenkins/tasks/slack/notification.sh
-
                     '''
             }
         }
-
         success {
             container('dpp-mx-jenkins-iac-agent'){
                     sh '''

@@ -79,8 +79,8 @@ pipeline {
                 container('dpp-mx-jenkins-app-agent') {
                     script {
                         try {
-                            echo 'RUNNING UNIT TEST CASES..'
                             sh '''
+                                echo 'RUNNING UNIT TEST CASES..'
                                 /bin/sh pipeline-tools-jenkins/jenkins/tasks/test/test.sh
                             '''
                         }
@@ -98,8 +98,8 @@ pipeline {
                 container('dpp-mx-jenkins-app-agent') {
                     script {
                         try {
-                            echo 'INITIATING BUILD..'
                             sh '''
+                                echo 'INITIATING BUILD..'
                                 /bin/sh pipeline-tools-jenkins/jenkins/tasks/build/build.sh
                             '''
                         }
@@ -112,24 +112,24 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
-            steps {
-                container('dpp-mx-jenkins-iac-agent') {
-                    script {
-                        try {
-                            echo 'INITIATING DEPLOYMENT..'
-                            sh '''
-                                /bin/sh pipeline-tools-jenkins/jenkins/tasks/deploy/deploy.sh
-                            '''
-                        }
-                        catch (exc) {
-                            echo 'DEPLOYMENT FAILED!'
-                            currentBuild.result = 'FAILURE'
-                        }
-                    }
-                }
-            }
-        }
+        // stage('Deploy') {
+        //     steps {
+        //         container('dpp-mx-jenkins-iac-agent') {
+        //             script {
+        //                 try {
+        //                     sh '''
+        //                         echo 'INITIATING DEPLOYMENT..'
+        //                         /bin/sh pipeline-tools-jenkins/jenkins/tasks/deploy/deploy.sh
+        //                     '''
+        //                 }
+        //                 catch (exc) {
+        //                     echo 'DEPLOYMENT FAILED!'
+        //                     currentBuild.result = 'FAILURE'
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
     }
              
     post {
@@ -138,6 +138,10 @@ pipeline {
                 sh '''
                  echo 'BUILDING JAR/WAR FILE FOR VERACODE SCAN..'
                  /bin/sh pipeline-tools-jenkins/jenkins/tasks/veracode/veracode-build.sh
+                 
+                 # To Do - enable sonarqube later
+                 #echo 'INITIATE SONARQUBE REPORT GENERATION..'
+                 #/bin/sh pipeline-tools-jenkins/jenkins/tasks/sonar/sonar.sh
                 '''
             } 
             veracode applicationName: "${VC_APP_NAME}", canFailJob: false, timeout: 1, waitForScan: false, criticality: "VeryHigh" , debug: true, deleteIncompleteScanLevel: '0', fileNamePattern: '', replacementPattern: '', sandboxName: '', scanExcludesPattern: '', scanIncludesPattern: '**/**.war, **/**.jar', scanName: '$buildnumber-$timestamp', teams: '', uploadIncludesPattern: 'veracode/**/**.war, veracode/**/**.jar', vid: "${VERACODE_API_ID}", vkey: "${VERACODE_API_KEY}"   
@@ -146,16 +150,16 @@ pipeline {
             container('dpp-mx-jenkins-iac-agent'){
                     sh '''
                         echo 'SEND SLCAK NOTIFICATIONS..'
-                         SLACK_MSG="<!here> App: ${PROJECT} Task:  - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/$buildnumber/console| Failure>"
-                         /bin/sh pipeline-tools-jenkins/jenkins/tasks/slack/notification.sh
+                        SLACK_MSG="<!here> App: ${PROJECT} Task:  - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/$buildnumber/console| Failure>"
+                        /bin/sh pipeline-tools-jenkins/jenkins/tasks/slack/notification.sh
                     '''
             }
         }
         success {
             container('dpp-mx-jenkins-iac-agent'){
                     sh '''
-                         SLACK_MSG="<!here> App: ${PROJECT} Task:  - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/$buildnumber/console| Failure>"
-                         /bin/sh pipeline-tools-jenkins/jenkins/tasks/slack/notification.sh
+                        SLACK_MSG="<!here> App: ${PROJECT} Task:  - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/$buildnumber/console| Failure>"
+                        /bin/sh pipeline-tools-jenkins/jenkins/tasks/slack/notification.sh
                     '''
             }
         }

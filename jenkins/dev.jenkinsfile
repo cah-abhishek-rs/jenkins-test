@@ -105,8 +105,7 @@ pipeline {
         failure {
             container('dpp-mx-jenkins-iac-agent'){
                     sh '''
-                        echo $SLACK_WEB_HOOK_URL $SLACK_CHANNEL
-                         curl -X POST -H 'Content-type: application/json' --data '{"text": "test", "channel" : ${SLACK_CHANNEL}}' https://hooks.slack.com/services/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
+                         curl -X POST -H 'Content-type: application/json' --data '{"text": "<!here> \nApp: `${PROJECT_NAME} \nTask: `docker-artifact-build` - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/$BUILD_ID/console| Failure>", "channel" : ${SLACK_CHANNEL}}' ${SLACK_WEB_HOOK_URL}
 
                     '''
             }
@@ -115,8 +114,7 @@ pipeline {
         success {
             container('dpp-mx-jenkins-iac-agent'){
                     sh '''
-                        echo $SLACK_WEB_HOOK_URL $SLACK_CHANNEL
-                         curl -X POST -H 'Content-type: application/json' --data '{"text": "test", "channel" : ${SLACK_CHANNEL}}' https://hooks.slack.com/services/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
+                         curl -X POST -H 'Content-type: application/json' --data '{"text": "<!here> \nApp: `${PROJECT_NAME} \nTask: `docker-artifact-build` - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/$BUILD_ID/console| Failure>", "channel" : ${SLACK_CHANNEL}}' ${SLACK_WEB_HOOK_URL}
 
                     '''
             }

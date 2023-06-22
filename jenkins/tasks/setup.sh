@@ -15,3 +15,6 @@ git clone https://github.com/cahcommercial/dpp-infrastructure-as-code.git pipeli
 
 cd pipeline-tools-chart
 git checkout main
+
+cd ..
+pwd

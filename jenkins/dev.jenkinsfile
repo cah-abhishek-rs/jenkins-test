@@ -72,6 +72,24 @@ pipeline {
             }
         }
 
+        stage('Run Test Cases') {
+            steps {
+                container('dpp-mx-jenkins-app-agent') {
+                    script {
+                        try {
+                            echo 'RUNNING UNIT TEST CASES..'
+                            sh '''
+                                /bin/sh pipeline-tools-jenkins/jenkins/tasks/test/test.sh
+                            '''
+                        }
+                        catch (exc) {
+                            echo 'UNIT TEST CASES FAILED!'
+                            currentBuild.result = 'FAILURE'
+                        }
+                    }  
+                }
+            }
+        }
 
         stage('Veracode scan') {
             steps {

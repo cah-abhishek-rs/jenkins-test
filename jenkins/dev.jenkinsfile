@@ -82,6 +82,7 @@ pipeline {
                             sh '''
                                 echo 'RUNNING UNIT TEST CASES..'
                                 /bin/sh pipeline-tools-jenkins/jenkins/tasks/test/test.sh
+                                echo 'UNIT TEST CASES PASSED..'
                             '''
                         }
                         catch (exc) {
@@ -144,7 +145,7 @@ pipeline {
                  #/bin/sh pipeline-tools-jenkins/jenkins/tasks/sonar/sonar.sh
                 '''
             } 
-            veracode applicationName: "${VC_APP_NAME}", canFailJob: false, timeout: 1, waitForScan: false, criticality: "VeryHigh" , debug: true, deleteIncompleteScanLevel: '0', fileNamePattern: '', replacementPattern: '', sandboxName: '', scanExcludesPattern: '', scanIncludesPattern: '**/**.war, **/**.jar', scanName: '$buildnumber-$timestamp', teams: '', uploadIncludesPattern: 'veracode/**/**.war, veracode/**/**.jar', vid: "${VERACODE_API_ID}", vkey: "${VERACODE_API_KEY}"   
+            veracode applicationName: "${VC_APP_NAME}", canFailJob: false, waitForScan: false, criticality: "VeryHigh" , debug: true, deleteIncompleteScanLevel: '0', fileNamePattern: '', replacementPattern: '', sandboxName: '', scanExcludesPattern: '', scanIncludesPattern: '**/**.war, **/**.jar', scanName: '$buildnumber-$timestamp', teams: '', uploadIncludesPattern: 'veracode/**/**.war, veracode/**/**.jar', vid: "${VERACODE_API_ID}", vkey: "${VERACODE_API_KEY}"   
         }
         failure {
             container('dpp-mx-jenkins-iac-agent'){

@@ -137,7 +137,7 @@ pipeline {
     post {
         always {
             container('dpp-mx-jenkins-app-agent'){
-                // sh '''
+                sh '''
                 //  echo 'BUILDING JAR/WAR FILE FOR VERACODE SCAN..'
                 //  /bin/sh pipeline-tools-jenkins/jenkins/tasks/veracode/veracode-build.sh
                  

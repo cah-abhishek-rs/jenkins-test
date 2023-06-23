@@ -166,8 +166,9 @@ pipeline {
                     echo "Running1 ${env.BUILD_ID} on ${env.JENKINS_URL}"
 
                     sh '''
+                        VAR BUILD_ID = 
                         echo 'SEND SLCAK NOTIFICATIONS..'
-                        SLACK_MSG="<!here> App: ${PROJECT} Task:  - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/$buildnumber/console| Failure>"
+                        SLACK_MSG="<!here> App: ${PROJECT} Task:  - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/$buildid/console| Failure>"
                         echo "${SLACK_MSG}"
                         /bin/sh pipeline-tools-jenkins/jenkins/tasks/slack/notification.sh
                     '''

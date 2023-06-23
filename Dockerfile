@@ -4,21 +4,16 @@ FROM amazoncorretto:17-alpine AS base-build
 # Update packages
 RUN apk update && apk upgrade && apk --no-cache add bash
 
-
 WORKDIR /usr/app
 
 # Get gradle distribution
-COPY ./*.gradle ./
-
+COPY *.gradle gradle.* gradlew ./
 COPY gradle/ ./gradle
-
 RUN ./gradlew --version
 
 # Build java project
 COPY gradlefiles/ ./gradlefiles/
-
 COPY src/ ./src/
-
 RUN ./gradlew build \
     && rm -rf /usr/app/src /usr/app/gradlefiles /usr/app/*.gradle /usr/app/gradle /usr/app/gradlew
 

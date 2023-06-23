@@ -167,7 +167,7 @@ pipeline {
 
                     sh '''
                         echo 'SEND SLCAK NOTIFICATIONS..'
-                        SLACK_MSG="<!here> App: ${PROJECT} Task:  - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/$buildid/console| Failure>"
+                        SLACK_MSG="<!here> App: ${PROJECT} Task:  - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/${env.BUILD_ID}/console| Failure>"
                         echo "${SLACK_MSG}"
                         /bin/sh pipeline-tools-jenkins/jenkins/tasks/slack/notification.sh
                     '''

@@ -33,7 +33,7 @@ RUN ls -l
 
 COPY --from=base-build /usr/app/build/libs/dpp-mx-digital-pharmacy-gateway*.jar ./dpp-mx-digital-pharmacy-gateway.jar
 
-ls -l
+RUN ls -l
 
 # Expose spring application port
 EXPOSE 8080

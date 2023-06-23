@@ -163,16 +163,17 @@ pipeline {
             //                         vid: "${VERACODE_API_ID}", vkey: "${VERACODE_API_KEY}"   
         }
         failure {
+                            echo "Running1 ${env.BUILD_ID} on ${env.JENKINS_URL}"
             container('dpp-mx-jenkins-iac-agent'){
                     sh '''
-                       echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
+                       echo "Running "${env.BUILD_ID}" on "${env.JENKINS_URL}""
                     '''
             }
         }
         success {
             container('dpp-mx-jenkins-iac-agent'){
                     sh '''
-                        echo "Running ${env.BUILD_ID} on ${env.JENKINS_URL}"
+                        echo "Running "${env.BUILD_ID}" on "${env.JENKINS_URL}""
                         
                     '''
             }

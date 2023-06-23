@@ -53,12 +53,12 @@ pipeline {
         VC_APP_NAME           = 'mscripts-dpp-api-gateway'
         VALUES_FILE_PATH      = "charts/eks-deployment/dev.values.yaml"
         SLACK_WEB_HOOK_URL    = credentials('SLACK_WEB_HOOK_URL')
-        SLACK_CHANNEL         = "#test-dpp-gateway"
+        SLACK_CHANNEL         = "#gladiators-notifications"
         SLACK_MSG             = ""
         ECR_URL               = "998585994771.dkr.ecr.us-east-1.amazonaws.com"
         SERVICE_IMAGE         = "998585994771.dkr.ecr.us-east-1.amazonaws.com/dpp-mx-gateway:${ENV}-${env.GIT_COMMIT}-${env.BUILD_NUMBER}"
         IMAGE_TAG             = "${ENV}-${env.GIT_COMMIT}-${env.BUILD_NUMBER}"
-        BUILD_ID          = "${env.BUILD_ID}"
+        BUILD_ID              = "${env.BUILD_ID}"
     }
 
     stages {
@@ -75,44 +75,44 @@ pipeline {
             }
         }
 
-        // stage('Run Test Cases') {
-        //     steps {
-        //         container('dpp-mx-jenkins-app-agent') {
-        //             script {
-        //                 try {
-        //                     sh '''
-        //                         echo 'RUNNING UNIT TEST CASES..'
-        //                         /bin/sh pipeline-tools-jenkins/jenkins/tasks/test/test.sh
-        //                         echo 'UNIT TEST CASES PASSED..'
-        //                     '''
-        //                 }
-        //                 catch (exc) {
-        //                     echo 'UNIT TEST CASES FAILED!'
-        //                     currentBuild.result = 'FAILURE'
-        //                 }
-        //             }  
-        //         }
-        //     }
-        // }
+        stage('Run Test Cases') {
+            steps {
+                container('dpp-mx-jenkins-app-agent') {
+                    script {
+                        try {
+                            sh '''
+                                echo 'RUNNING UNIT TEST CASES..'
+                                /bin/sh pipeline-tools-jenkins/jenkins/tasks/test/test.sh
+                                echo 'UNIT TEST CASES PASSED..'
+                            '''
+                        }
+                        catch (exc) {
+                            echo 'UNIT TEST CASES FAILED!'
+                            currentBuild.result = 'FAILURE'
+                        }
+                    }  
+                }
+            }
+        }
 
-        // stage('Build') {
-        //     steps {
-        //         container('dpp-mx-jenkins-iac-agent') {
-        //             script {
-        //                 try {
-        //                     sh '''
-        //                         echo 'INITIATING BUILD..'
-        //                         /bin/sh pipeline-tools-jenkins/jenkins/tasks/build/build.sh
-        //                     '''
-        //                 }
-        //                 catch (exc) {
-        //                     echo 'BUILD FAILED!'
-        //                     currentBuild.result = 'FAILURE'
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Build') {
+            steps {
+                container('dpp-mx-jenkins-iac-agent') {
+                    script {
+                        try {
+                            sh '''
+                                echo 'INITIATING BUILD..'
+                                /bin/sh pipeline-tools-jenkins/jenkins/tasks/build/build.sh
+                            '''
+                        }
+                        catch (exc) {
+                            echo 'BUILD FAILED!'
+                            currentBuild.result = 'FAILURE'
+                        }
+                    }
+                }
+            }
+        }
 
         stage('Deploy') {
             steps {
@@ -137,43 +137,37 @@ pipeline {
     post {
         always {
             container('dpp-mx-jenkins-app-agent'){
-                // sh '''
-                // //  echo 'BUILDING JAR/WAR FILE FOR VERACODE SCAN..'
-                // //  /bin/sh pipeline-tools-jenkins/jenkins/tasks/veracode/veracode-build.sh
+                sh '''
+                 echo 'BUILDING JAR/WAR FILE FOR VERACODE SCAN..'
+                 /bin/sh pipeline-tools-jenkins/jenkins/tasks/veracode/veracode-build.sh
                  
-                // //  # To Do - enable sonarqube later
-                // //  #echo 'INITIATE SONARQUBE REPORT GENERATION..'
-                // //  #/bin/sh pipeline-tools-jenkins/jenkins/tasks/sonar/sonar.sh
-                // '''
+                 # To Do - enable sonarqube later
+                 #echo 'INITIATE SONARQUBE REPORT GENERATION..'
+                 #/bin/sh pipeline-tools-jenkins/jenkins/tasks/sonar/sonar.sh
+                '''
             } 
-            // veracode applicationName: "${VC_APP_NAME}", 
-            //                         canFailJob: false, 
-            //                         waitForScan: false, 
-            //                         criticality: "VeryHigh" , 
-            //                         debug: true, 
-            //                         deleteIncompleteScanLevel: '1', 
-            //                         fileNamePattern: '', 
-            //                         replacementPattern: '', 
-            //                         sandboxName: '', 
-            //                         scanExcludesPattern: '', 
-            //                         scanIncludesPattern: '**/**.war, **/**.jar', 
-            //                         scanName: '$buildnumber-$timestamp', 
-            //                         teams: '', 
-            //                         uploadIncludesPattern: 'veracode/**/**.war, veracode/**/**.jar', 
-            //                         vid: "${VERACODE_API_ID}", vkey: "${VERACODE_API_KEY}"   
+            veracode applicationName: "${VC_APP_NAME}", 
+                                    canFailJob: false, 
+                                    waitForScan: false, 
+                                    criticality: "VeryHigh" , 
+                                    debug: true, 
+                                    deleteIncompleteScanLevel: '1', 
+                                    fileNamePattern: '', 
+                                    replacementPattern: '', 
+                                    sandboxName: '', 
+                                    scanExcludesPattern: '', 
+                                    scanIncludesPattern: '**/**.war, **/**.jar', 
+                                    scanName: '$buildnumber-$timestamp', 
+                                    teams: '', 
+                                    uploadIncludesPattern: 'veracode/**/**.war, veracode/**/**.jar', 
+                                    vid: "${VERACODE_API_ID}", vkey: "${VERACODE_API_KEY}"   
         }
         failure {
-                    echo "Running1 ${env.BUILD_ID} on ${env.JENKINS_URL}"
-
                     sh '''
                         echo 'SEND SLCAK NOTIFICATIONS..'
                         SLACK_MSG="<!here> App: ${PROJECT} BuildId : ${BUILD_ID} Task: - https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/${BUILD_ID}/console"
-                        echo "${SLACK_MSG}"
                         /bin/sh pipeline-tools-jenkins/jenkins/tasks/slack/notification.sh
                     '''
-        }
-        success {
-             echo "Running1 ${env.BUILD_ID} on ${env.JENKINS_URL}"
         }
     }
 }

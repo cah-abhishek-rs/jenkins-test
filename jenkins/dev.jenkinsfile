@@ -6,7 +6,7 @@ pipeline {
         kind: Pod
         metadata:
           labels:
-            name: dpp-mx-jenkins-iac-agent
+            name: dpp-jenkins-agent
         spec:
           containers:
           - name: dpp-mx-jenkins-iac-agent

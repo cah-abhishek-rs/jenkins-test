@@ -31,7 +31,7 @@ WORKDIR /usr/app
 
 RUN ls -l 
 
-COPY --from=base-build /usr/app/build/libs/dpp-mx-digital-pharmacy-gateway-0.0.1-SNAPSHOT-plain.jar ./dpp-mx-digital-pharmacy-gateway.jar
+COPY --from=base-build /usr/app/build/libs/dpp-mx-digital-pharmacy-gateway*.jar ./dpp-mx-digital-pharmacy-gateway.jar
 
 # Expose spring application port
 EXPOSE 8080

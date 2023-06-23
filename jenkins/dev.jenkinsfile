@@ -58,6 +58,7 @@ pipeline {
         ECR_URL               = "998585994771.dkr.ecr.us-east-1.amazonaws.com"
         SERVICE_IMAGE         = "998585994771.dkr.ecr.us-east-1.amazonaws.com/dpp-mx-gateway:${ENV}-${env.GIT_COMMIT}-${env.BUILD_NUMBER}"
         IMAGE_TAG             = "${ENV}-${env.GIT_COMMIT}-${env.BUILD_NUMBER}"
+        BUILD_NUMBER          = "${env.BUILD_NUMBER}"
     }
 
     stages {
@@ -164,7 +165,7 @@ pipeline {
         failure {
             container('dpp-mx-jenkins-iac-agent'){
                     sh '''
-                        echo "SEND SLCAK NOTIFICATIONS.. ${env.BUILD_NUMBER}"
+                        echo "SEND SLCAK NOTIFICATIONS.. ${BUILD_NUMBER}"
                         SLACK_MSG="<!here> App: ${PROJECT} Task:  - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/${env.BUILD_NUMBER}/console| Failure>"
                         /bin/sh pipeline-tools-jenkins/jenkins/tasks/slack/notification.sh
                     '''
@@ -173,7 +174,7 @@ pipeline {
         success {
             container('dpp-mx-jenkins-iac-agent'){
                     sh '''
-                         echo "SEND SLCAK NOTIFICATIONS..  ${env.BUILD_NUMBER}"
+                         echo "SEND SLCAK NOTIFICATIONS..  ${BUILD_NUMBER}"
                         SLACK_MSG="<!here> App: ${PROJECT} Task:  - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/${env.BUILD_NUMBER}/console| Failure>"
                         /bin/sh pipeline-tools-jenkins/jenkins/tasks/slack/notification.sh
                     '''

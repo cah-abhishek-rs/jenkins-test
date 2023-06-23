@@ -164,7 +164,7 @@ pipeline {
         failure {
             container('dpp-mx-jenkins-iac-agent'){
                     sh '''
-                        echo 'SEND SLCAK NOTIFICATIONS.. $buildnumber'
+                        echo 'SEND SLCAK NOTIFICATIONS.. "${buildnumber}"'
                         SLACK_MSG="<!here> App: ${PROJECT} Task:  - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/$buildnumber/console| Failure>"
                         /bin/sh pipeline-tools-jenkins/jenkins/tasks/slack/notification.sh
                     '''
@@ -173,7 +173,7 @@ pipeline {
         success {
             container('dpp-mx-jenkins-iac-agent'){
                     sh '''
-                         echo 'SEND SLCAK NOTIFICATIONS.. $buildnumber'
+                         echo 'SEND SLCAK NOTIFICATIONS.. "${buildnumber}"'
                         SLACK_MSG="<!here> App: ${PROJECT} Task:  - <https://adc-deployments.infra.remscripts.com/view/DPP-APPOINTMENT-SERVICE-NP/job/DPP-AWS-API-GATEWAY/$buildnumber/console| Failure>"
                         /bin/sh pipeline-tools-jenkins/jenkins/tasks/slack/notification.sh
                     '''

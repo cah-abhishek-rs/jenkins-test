@@ -164,19 +164,8 @@ pipeline {
         }
         failure {
                             echo "Running1 ${env.BUILD_ID} on ${env.JENKINS_URL}"
-            container('dpp-mx-jenkins-iac-agent'){
-                    sh '''
-                       echo "Running "${env.BUILD_ID}" on "${env.JENKINS_URL}""
-                    '''
-            }
         }
         success {
-            container('dpp-mx-jenkins-iac-agent'){
-                    sh '''
-                        echo "Running "${env.BUILD_ID}" on "${env.JENKINS_URL}""
-                        
-                    '''
-            }
         }
     }
 }

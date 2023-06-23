@@ -166,6 +166,7 @@ pipeline {
                             echo "Running1 ${env.BUILD_ID} on ${env.JENKINS_URL}"
         }
         success {
+             echo "Running1 ${env.BUILD_ID} on ${env.JENKINS_URL}"
         }
     }
 }
